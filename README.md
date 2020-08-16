@@ -1,4 +1,4 @@
-# second_game
+# gridcircuitpuzzle
 
 A new Flutter project.
 
