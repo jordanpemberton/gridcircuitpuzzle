@@ -1,4 +1,4 @@
-package com.example.second_game
+package com.example.gridcircuitpuzzle
 
 import io.flutter.embedding.android.FlutterActivity
 
