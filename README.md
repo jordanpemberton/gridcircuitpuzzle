@@ -1,3 +1,6 @@
-# gridcircuitpuzzle
+# Grid Circuit Puzzle
 
-A new Flutter project.
+A Flutter puzzle app (in progress)
+
+![Screengrab A]()
+

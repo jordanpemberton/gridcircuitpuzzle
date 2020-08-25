@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Puzzle Home Page'),
+      home: MyHomePage(title: 'Circuit Grid Puzzle'),
     );
   }
 }
@@ -33,75 +33,84 @@ class _MyHomePageState extends State<MyHomePage> {
   List gamePieces = [
     {
       'pieceKey': 1,
-      'top': false,
-      'right': true,
-      'bottom': true,
-      'left': false,
-      'selected': false,
+      'center': 1,
+      'top': 0,
+      'right': 2,
+      'bottom': 1,
+      'left': 0,
+      'selected': 0,
     },
     {
       'pieceKey': 2,
-      'top': true,
-      'right': false,
-      'bottom': false,
-      'left': true,
-      'selected': false,
+      'center': 2,
+      'top': 2,
+      'right': 0,
+      'bottom': 0,
+      'left': 2,
+      'selected': 0,
     },
     {
       'pieceKey': 3,
-      'top': false,
-      'right': false,
-      'bottom': false,
-      'left': true,
-      'selected': false,
+      'center': 2,
+      'top': 0,
+      'right': 0,
+      'bottom': 0,
+      'left': 2,
+      'selected': 0,
     },
     {
       'pieceKey': 4,
-      'top': true,
-      'right': true,
-      'bottom': true,
-      'left': true,
-      'selected': false,
+      'center': 1,
+      'top': 1,
+      'right': 2,
+      'bottom': 1,
+      'left': 2,
+      'selected': 0,
     },
     {
       'pieceKey': 5,
-      'top': true,
-      'right': true,
-      'bottom': false,
-      'left': false,
-      'selected': false,
+      'center': 1,
+      'top': 1,
+      'right': 2,
+      'bottom': 0,
+      'left': 0,
+      'selected': 0,
     },
     {
       'pieceKey': 6,
-      'top': true,
-      'right': false,
-      'bottom': false,
-      'left': false,
-      'selected': false,
+      'center': 1,
+      'top': 1,
+      'right': 0,
+      'bottom': 0,
+      'left': 0,
+      'selected': 0,
     },
     {
       'pieceKey': 7,
-      'top': false,
-      'right': false,
-      'bottom': true,
-      'left': true,
-      'selected': false,
+      'center': 2,
+      'top': 0,
+      'right': 0,
+      'bottom': 2,
+      'left': 2,
+      'selected': 0,
     },
     {
       'pieceKey': 8,
-      'top': true,
-      'right': true,
-      'bottom': true,
-      'left': false,
-      'selected': false,
+      'center': 1,
+      'top': 1,
+      'right': 2,
+      'bottom': 1,
+      'left': 0,
+      'selected': 0,
     },
     {
       'pieceKey': 9,
-      'top': false,
-      'right': false,
-      'bottom': true,
-      'left': false,
-      'selected': false,
+      'center': 1,
+      'top': 0,
+      'right': 0,
+      'bottom': 1,
+      'left': 0,
+      'selected': 0,
     },
   ];
 
@@ -119,13 +128,13 @@ class _MyHomePageState extends State<MyHomePage> {
       // If reclicked same piece -> Unselect:
       if (currentMove['firstPiece'] == pieceKey) {
         currentMove['firstPiece'] = null;
-        currPiece['selected'] = false;
+        currPiece['selected'] = 0;
       }
 
       // Select First Piece:
       else if (currentMove['firstPiece'] == null) {
         currentMove['firstPiece'] = pieceKey;
-        currPiece['selected'] = true;
+        currPiece['selected'] = 1;
       }
 
       // Select Second Piece:
@@ -138,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
         int prevIndex = gamePieces.indexWhere((item) => item['pieceKey'] == prevKey);
         Map prevPiece = gamePieces[prevIndex];
         // Unselect
-        prevPiece['selected'] = false;
+        prevPiece['selected'] = 0;
 
         // Swap places in list:
         gamePieces[prevIndex] = currPiece;

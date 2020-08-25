@@ -5,7 +5,7 @@ class GamePiece extends StatelessWidget {
     this.pieceData,
     this.pieceTapped,
   });
-
+ 
   final Map pieceData;
   final Function pieceTapped;
 
@@ -15,18 +15,17 @@ class GamePiece extends StatelessWidget {
       padding: const EdgeInsets.all(2.0),
       child: Container(
         color: Colors.grey[300],
-        // color: selected ? Colors.lightBlue[200] : Colors.grey[300],
         child: GestureDetector(
           onTap: () {
             print(pieceTapped);
             return pieceTapped(pieceData['pieceKey']);
           },
-          // This is necessary ?
+          // This is necessary 
           behavior: HitTestBehavior.translucent,
           child: Stack(
             children: [
               AnimatedOpacity(
-                opacity: pieceData['selected'] ? 0.4 : 0,
+                opacity: pieceData['selected'] == 1 ? 0.4 : 0,
                 duration: Duration(milliseconds: 200),
                 child: Container(
                   height: double.infinity,
@@ -36,58 +35,70 @@ class GamePiece extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.center,
-                child: FractionallySizedBox(
-                  widthFactor: 1 / 3,
-                  heightFactor: 1 / 3,
-                  child: Container(
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: pieceData['top']
+                child: pieceData['center'] > 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: Container(
-                          color: Colors.blue,
+                          color: pieceData['center'] == 1
+                              ? Colors.blue[300]
+                              : Colors.blue,
+                        ),
+                      )
+                    : Container(),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: pieceData['top'] > 0
+                    ? FractionallySizedBox(
+                        widthFactor: 1 / 3,
+                        heightFactor: 1 / 3,
+                        child: Container(
+                          color: pieceData['top'] == 1
+                              ? Colors.blue[300]
+                              : Colors.blue,
                         ),
                       )
                     : Container(),
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: pieceData['right']
+                child: pieceData['right'] > 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: Container(
-                          color: Colors.blue,
+                          color: pieceData['right'] == 1
+                              ? Colors.blue[300]
+                              : Colors.blue,
                         ),
                       )
                     : Container(),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: pieceData['bottom']
+                child: pieceData['bottom'] > 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: Container(
-                          color: Colors.blue,
+                          color: pieceData['bottom'] == 1
+                              ? Colors.blue[300]
+                              : Colors.blue,
                         ),
                       )
                     : Container(),
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: pieceData['left']
+                child: pieceData['left'] > 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: Container(
-                          color: Colors.blue,
+                          color: pieceData['left'] == 1
+                              ? Colors.blue[300]
+                              : Colors.blue,
                         ),
                       )
                     : Container(),
