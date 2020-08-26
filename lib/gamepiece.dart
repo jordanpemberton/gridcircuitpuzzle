@@ -40,7 +40,9 @@ class GamePiece extends StatelessWidget {
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: Container(
-                          color: pieceData['center'] == 1
+                          color: pieceData['center'] == 3
+                              ? Colors.red
+                              : pieceData['center'] == 1
                               ? Colors.blue[300]
                               : Colors.blue,
                         ),

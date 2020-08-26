@@ -1,6 +1,7 @@
 # Grid Circuit Puzzle
+#### Prototype
+### A Flutter puzzle app.  Complete the circuits to win!
 
-### A Flutter puzzle app (in development)
+![Screengrab Prototype B](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/circuits_early.png)
 
-
-![Screengrab In Progress](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/early_4_screengrab.png)
+![Screengrab Prototype A](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/early_4_screengrab.png)
