@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
+import 'package:gridcircuitpuzzle/piecearm.dart';
+import 'package:gridcircuitpuzzle/piececenter.dart';
 
 class GamePiece extends StatelessWidget {
   GamePiece({
-    this.pieceData,
-    this.pieceTapped,
+    this.data,
+    this.func,
   });
- 
-  final Map pieceData;
-  final Function pieceTapped;
+
+  final Map data;
+  final Function func;
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +21,14 @@ class GamePiece extends StatelessWidget {
         color: Colors.grey[300],
         child: GestureDetector(
           onTap: () {
-            print(pieceTapped);
-            return pieceTapped(pieceData['pieceKey']);
+            return func();
           },
-          // This is necessary 
+          // This is necessary
           behavior: HitTestBehavior.translucent,
           child: Stack(
             children: [
               AnimatedOpacity(
-                opacity: pieceData['selected'] == 1 ? 0.4 : 0,
+                opacity: data['s'] == 1 ? 0.4 : 0,
                 duration: Duration(milliseconds: 200),
                 child: Container(
                   height: double.infinity,
@@ -33,78 +36,72 @@ class GamePiece extends StatelessWidget {
                   color: Colors.blue[200],
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: pieceData['center'] > 0
-                    ? FractionallySizedBox(
-                        widthFactor: 1 / 3,
-                        heightFactor: 1 / 3,
-                        child: Container(
-                          color: pieceData['center'] == 3
-                              ? Colors.red
-                              : pieceData['center'] == 1
-                              ? Colors.blue[300]
-                              : Colors.blue,
-                        ),
-                      )
-                    : Container(),
-              ),
+              // TOP
               Align(
                 alignment: Alignment.topCenter,
-                child: pieceData['top'] > 0
+                child: data['t'] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
-                        child: Container(
-                          color: pieceData['top'] == 1
-                              ? Colors.blue[300]
-                              : Colors.blue,
+                        child: PieceArm(
+                          connected: data['t'],
+                          rotation: 0,
                         ),
                       )
                     : Container(),
               ),
+              // RIGHT
               Align(
                 alignment: Alignment.centerRight,
-                child: pieceData['right'] > 0
+                child: data['r'] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
-                        child: Container(
-                          color: pieceData['right'] == 1
-                              ? Colors.blue[300]
-                              : Colors.blue,
+                        child: PieceArm(
+                          connected: data['r'],
+                          rotation: math.pi / 2,
                         ),
                       )
                     : Container(),
               ),
+              // BOTTOM
               Align(
                 alignment: Alignment.bottomCenter,
-                child: pieceData['bottom'] > 0
+                child: data['b'] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
-                        child: Container(
-                          color: pieceData['bottom'] == 1
-                              ? Colors.blue[300]
-                              : Colors.blue,
+                        child: PieceArm(
+                          connected: data['b'],
+                          rotation: math.pi,
                         ),
                       )
                     : Container(),
               ),
+              // TOP
               Align(
                 alignment: Alignment.centerLeft,
-                child: pieceData['left'] > 0
+                child: data['l'] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
-                        child: Container(
-                          color: pieceData['left'] == 1
-                              ? Colors.blue[300]
-                              : Colors.blue,
+                        child: PieceArm(
+                          connected: data['l'],
+                          rotation: math.pi * 1.5,
                         ),
                       )
                     : Container(),
               ),
+              // CENTER
+              Align(
+                  alignment: Alignment.center,
+                  child: FractionallySizedBox(
+                    widthFactor: 1 / 3,
+                    heightFactor: 1 / 3,
+                    child: PieceCenter(
+                      data: data,
+                    ),
+                  )),
             ],
           ),
         ),

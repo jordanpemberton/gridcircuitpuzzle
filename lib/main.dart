@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'dart:async';
 
 import './board.dart';
 
@@ -30,134 +29,126 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List gamePieces = [
-    {
-      'pieceKey': 1,
-      'center': 3,
-      'top': 0,
-      'right': 0,
-      'bottom': 0,
-      'left': 1,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 2,
-      'center': 1,
-      'top': 1,
-      'right': 0,
-      'bottom': 1,
-      'left': 0,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 3,
-      'center': 3,
-      'top': 0,
-      'right': 0,
-      'bottom': 0,
-      'left': 1,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 4,
-      'center': 1,
-      'top': 1,
-      'right': 1,
-      'bottom': 0,
-      'left': 0,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 5,
-      'center': 3,
-      'top': 0,
-      'right': 2,
-      'bottom': 0,
-      'left': 0,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 6,
-      'center': 1,
-      'top': 0,
-      'right': 1,
-      'bottom': 1,
-      'left': 0,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 7,
-      'center': 3,
-      'top': 2,
-      'right': 0,
-      'bottom': 0,
-      'left': 0,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 8,
-      'center': 1,
-      'top': 0,
-      'right': 1,
-      'bottom': 0,
-      'left': 1,
-      'selected': 0,
-    },
-    {
-      'pieceKey': 9,
-      'center': 2,
-      'top': 0,
-      'right': 0,
-      'bottom': 2,
-      'left': 2,
-      'selected': 0,
-    },
-  ];
+  static const int pieceCount = 9;
 
-  Map currentMove = {
-    'firstPiece': null,
-    'secondPiece': null,
+  static const Map game = {
+    0: {
+      't': -1,
+      'r': -1,
+      'b': 0,
+      'l': 0,
+      's': 0,
+    },
+    1: {
+      't': -1,
+      'r': -1,
+      'b': 0,
+      'l': 0,
+      's': 0,
+    },
+    2: {
+      't': 1,
+      'r': 1,
+      'b': 0,
+      'l': 1,
+      's': 1,
+    },
+    3: {
+      't': -1,
+      'r': -1,
+      'b': 1,
+      'l': 0,
+      's': 0,
+    },
+    4: {
+      't': 1,
+      'r': 0,
+      'b': 1,
+      'l': 0,
+      's': 0,
+    },
+    5: {
+      't': 1,
+      'r': 0,
+      'b': 1,
+      'l': 1,
+      's': 0,
+    },
+    6: {
+      't': 0,
+      'r': 0,
+      'b': -1,
+      'l': 1,
+      's': 0,
+    },
+    7: {
+      't': -1,
+      'r': -1,
+      'b': 0,
+      'l': 0,
+      's': 0,
+    },
+    8: {
+      't': -1,
+      'r': -1,
+      'b': 0,
+      'l': 0,
+      's': 0,
+    },
   };
 
-  void _onPieceTapped(int pieceKey) {
+  List pieceList = [ for (var i=0; i<pieceCount; i++) game[i] ];
+  
+  var currentMove = new List(2);
+
+  void makePieceList() {
     setState(() {
-      // Current piece (matches key):
-      int currIndex = gamePieces.indexWhere((item) => item['pieceKey'] == pieceKey);
-      Map currPiece = gamePieces[currIndex];
-
-      // If reclicked same piece -> Unselect:
-      if (currentMove['firstPiece'] == pieceKey) {
-        currentMove['firstPiece'] = null;
-        currPiece['selected'] = 0;
-      }
-
-      // Select First Piece:
-      else if (currentMove['firstPiece'] == null) {
-        currentMove['firstPiece'] = pieceKey;
-        currPiece['selected'] = 1;
-      }
-
-      // Select Second Piece:
-      else {
-        currentMove['secondPiece'] = pieceKey;
-        
-        int prevKey = currentMove['firstPiece'];
-
-        // Find first (prev) selected piece (the piece being moved):
-        int prevIndex = gamePieces.indexWhere((item) => item['pieceKey'] == prevKey);
-        Map prevPiece = gamePieces[prevIndex];
-        // Unselect
-        prevPiece['selected'] = 0;
-
-        // Swap places in list:
-        gamePieces[prevIndex] = currPiece;
-        gamePieces[currIndex] = prevPiece;
-
-        // Reset currentMove:
-        currentMove['firstPiece'] = null;
-        currentMove['secondPiece'] = null;
-      }
+      game.forEach((k,v) => pieceList[k] = v);
     });
+  }
+
+  void _onPieceTapped() {
+    return;
+  //   setState(() {
+  //     // Current piece (matches key):
+  //     int currIndex =
+  //         gamePieces.indexWhere((item) => item['pieceKey'] == pieceKey);
+  //     Map currPiece = gamePieces[currIndex];
+
+  //     // If reclicked same piece -> Unselect:
+  //     if (currentMove['firstPiece'] == pieceKey) {
+  //       currentMove['firstPiece'] = null;
+  //       currPiece['selected'] = 0;
+  //     }
+
+  //     // Select First Piece:
+  //     else if (currentMove['firstPiece'] == null) {
+  //       currentMove['firstPiece'] = pieceKey;
+  //       currPiece['selected'] = 1;
+  //     }
+
+  //     // Select Second Piece:
+  //     else {
+  //       currentMove['secondPiece'] = pieceKey;
+
+  //       int prevKey = currentMove['firstPiece'];
+
+  //       // Find first (prev) selected piece (the piece being moved):
+  //       int prevIndex =
+  //           gamePieces.indexWhere((item) => item['pieceKey'] == prevKey);
+  //       Map prevPiece = gamePieces[prevIndex];
+  //       // Unselect
+  //       prevPiece['selected'] = 0;
+
+  //       // Swap places in list:
+  //       gamePieces[prevIndex] = currPiece;
+  //       gamePieces[currIndex] = prevPiece;
+
+  //       // Reset currentMove:
+  //       currentMove['firstPiece'] = null;
+  //       currentMove['secondPiece'] = null;
+  //     }
+  //   });
   }
 
   @override
@@ -170,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Board(gamePieces, _onPieceTapped),
+            Board(pieceList, _onPieceTapped),
           ],
         ),
       ),

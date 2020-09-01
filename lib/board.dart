@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import './gamepiece.dart';
 
 class Board extends StatelessWidget {
-  Board(this.gamePieces, this.onTapFunction);
-  final List gamePieces;
+  Board(this.pieces, this.onTapFunction);
+  final List pieces;
   final Function onTapFunction;
 
   @override
@@ -15,13 +15,7 @@ class Board extends StatelessWidget {
         padding: EdgeInsets.all(10.0),
         physics: NeverScrollableScrollPhysics(),
         children: [
-          
-          ...gamePieces.map((piece) {
-            return GamePiece(
-              pieceData: piece,
-              pieceTapped: onTapFunction,
-            );
-          }).toList()
+          ...pieces.map((piece) => GamePiece(data: piece, func: onTapFunction,)),
         ],
       ),
     );
