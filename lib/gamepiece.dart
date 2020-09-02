@@ -6,10 +6,12 @@ import 'package:gridcircuitpuzzle/piececenter.dart';
 
 class GamePiece extends StatelessWidget {
   GamePiece({
+    this.index,
     this.data,
     this.func,
   });
 
+  final int index;
   final Map data;
   final Function func;
 
@@ -21,7 +23,7 @@ class GamePiece extends StatelessWidget {
         color: Colors.grey[300],
         child: GestureDetector(
           onTap: () {
-            return func();
+            return func(index);
           },
           // This is necessary
           behavior: HitTestBehavior.translucent,
