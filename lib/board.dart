@@ -5,7 +5,7 @@ class Board extends StatelessWidget {
   Board({
     this.count, this.pieces, this.func
   });
-  final int count;
+  final num count;
   final Map pieces;
   final Function func;
 

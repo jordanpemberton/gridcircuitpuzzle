@@ -17,6 +17,8 @@ class GamePiece extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool allConnect = data['t'] >= 0 && data['r'] >= 0 && data['b'] >= 0 && data['l'] >= 0;
+
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(
@@ -46,7 +48,8 @@ class GamePiece extends StatelessWidget {
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          connected: data['t'],
+                          localConnect: data['t'] == 1,
+                          allConnect: allConnect,
                           rotation: 0,
                         ),
                       )
@@ -60,7 +63,8 @@ class GamePiece extends StatelessWidget {
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          connected: data['r'],
+                          localConnect: data['r'] == 1,
+                          allConnect: allConnect,
                           rotation: math.pi / 2,
                         ),
                       )
@@ -74,7 +78,8 @@ class GamePiece extends StatelessWidget {
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          connected: data['b'],
+                          localConnect: data['b'] == 1,
+                          allConnect: allConnect,
                           rotation: math.pi,
                         ),
                       )
@@ -88,7 +93,8 @@ class GamePiece extends StatelessWidget {
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          connected: data['l'],
+                          localConnect: data['l'] == 1,
+                          allConnect: allConnect,
                           rotation: math.pi * 1.5,
                         ),
                       )

@@ -3,10 +3,12 @@ import 'package:gridcircuitpuzzle/piecepart.dart';
 
 class PieceArm extends StatelessWidget {
   PieceArm({
-    this.connected,
+    this.localConnect,
+    this.allConnect,
     this.rotation,
   });
-  final int connected;
+  final bool localConnect;
+  final bool allConnect;
   final double rotation; // 0, 90, 180, 270
 
   @override
@@ -19,33 +21,37 @@ class PieceArm extends StatelessWidget {
             align: Alignment.centerLeft,
             widthf: 1 / 4,
             heightf: 1 / 2,
+            hglt: allConnect,
           ),
           PiecePart(
             align: Alignment.centerRight,
             widthf: 1 / 4,
             heightf: 1 / 2,
+            hglt: allConnect,
           ),
           PiecePart(
             align: Alignment.topRight,
             widthf: 1 / 4,
             heightf: 1 / 4,
-            hglt: connected == 1,
+            hglt: localConnect,
           ),
           PiecePart(
             align: Alignment.topLeft,
             widthf: 1 / 4,
             heightf: 1 / 4,
-            hglt: connected == 1,
+            hglt: localConnect,
           ),
           PiecePart(
             align: Alignment.bottomRight,
             widthf: 1 / 4,
             heightf: 1 / 4,
+            hglt: allConnect,
           ),
           PiecePart(
             align: Alignment.bottomLeft,
             widthf: 1 / 4,
             heightf: 1 / 4,
+            hglt: allConnect,
           ),
         ],
       ),
