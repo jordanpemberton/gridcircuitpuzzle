@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
 import './board.dart';
 
 void main() {
@@ -30,6 +31,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const int _pieceCount = 16;
+
+  bool _newGame = true;
 
   Map _game = {
     0: {
@@ -162,70 +165,116 @@ class _MyHomePageState extends State<MyHomePage> {
     },
   };
 
-  int lastSelected;
+  int _lastSelected;
+
+  bool _solved = true;
+
+  bool _isSolved() {
+    for (int i = 0; i < _pieceCount; i++) {
+      if (_game[i].containsValue(-1)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void _shufflePieces() {
+    List _indexOrder = [for (int i = 0; i < _pieceCount; i++) i];
+    Map _tempGame = {};
+    setState(() {
+      _indexOrder.shuffle();
+      for (int i = 0; i < _pieceCount; i++) {
+        _tempGame[_indexOrder[i]] = _game[i];
+      }
+      _game = _tempGame;
+      _newGame = false;
+
+      for (int i = 0; i < _pieceCount; i++) {
+        _checkConnections(i);
+      }
+    });
+  }
 
   void _checkConnectHelper(int indexA, int indexB, String partA, String partB) {
-    if (_game[indexA][partA].abs() + _game[indexB][partB].abs() == 2) {
-      _game[indexA][partA] = (_game[indexA][partA]).abs();
-      _game[indexB][partB] = (_game[indexB][partB]).abs();
+    // print('A: $indexA, $partA = ${_game[indexA][partA]}');
+    // print('B: $indexB, $partB = ${_game[indexB][partB]}');
+    // nothing here to connect:
+    if (_game[indexA][partA] == 0 && _game[indexB][partB] == 0) {
+    }
+    // not connected:
+    else if (_game[indexA][partA] * _game[indexB][partB] == 0) {
+      _game[indexA][partA] = _game[indexA][partA] == 0 ? 0 : -1;
+      _game[indexB][partB] = _game[indexB][partB] == 0 ? 0 : -1;
+      // connected?
     } else {
-      _game[indexA][partA] = -((_game[indexA][partA]).abs());
-      _game[indexB][partB] = -((_game[indexB][partB]).abs());
+      _game[indexA][partA] = 1;
+      _game[indexB][partB] = 1;
     }
   }
 
   void _checkConnections(int index) {
     // Side length = square root of length
     int root = (math.sqrt(_pieceCount)).toInt();
+
     // Above:
     if (index - root >= 0) {
       _checkConnectHelper(index, index - root, 't', 'b');
     } else {
-      _game[index]['t'] = -((_game[index]['t']).abs());
+      _game[index]['t'] = _game[index]['t'] == 0 ? 0 : -1;
     }
+
     // Below:
     if (index + root < _pieceCount) {
       _checkConnectHelper(index, index + root, 'b', 't');
     } else {
-      _game[index]['b'] = -((_game[index]['b']).abs());
+      _game[index]['b'] = _game[index]['b'] == 0 ? 0 : -1;
     }
+
     // To left:
-    if (index - 1 == 0 || (0 < (index - 1) && index % root != 0)) {
+    if (index - 1 >= 0 && (index % root != 0)) {
       _checkConnectHelper(index, index - 1, 'l', 'r');
     } else {
-      _game[index]['l'] = -((_game[index]['l']).abs());
+      _game[index]['l'] = _game[index]['l'] == 0 ? 0 : -1;
     }
-    // // To right:
-    if (index + 1 == 0 ||
-        ((index + 1) < _pieceCount && (index +1) % root != 0)) {
+
+    // To right:
+    if (((index + 1) < _pieceCount) && ((index + 1) % root != 0)) {
       _checkConnectHelper(index, index + 1, 'r', 'l');
     } else {
-      _game[index]['r'] = -((_game[index]['r']).abs());
+      _game[index]['r'] = _game[index]['r'] == 0 ? 0 : -1;
     }
   }
 
   void _onPieceTapped(int index) {
     setState(() {
-      if (lastSelected == null) {
+      if (_lastSelected == null) {
         _game[index]['s'] = 1;
-        lastSelected = index;
-      } else if (lastSelected == index) {
+        _lastSelected = index;
+      } else if (_lastSelected == index) {
         _game[index]['s'] = 0;
-        lastSelected = null;
+        _lastSelected = null;
       } else {
-        _game[lastSelected]['s'] = 0;
-        Map temp = _game[lastSelected];
-        _game[lastSelected] = _game[index];
+        _game[_lastSelected]['s'] = 0;
+        Map temp = _game[_lastSelected];
+        _game[_lastSelected] = _game[index];
         _game[index] = temp;
-        _checkConnections(lastSelected);
+        _checkConnections(_lastSelected);
         _checkConnections(index);
-        lastSelected = null;
+        _lastSelected = null;
+      }
+      // Check if solved:
+      if (_isSolved()) {
+        print('YOU WIN!');
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_newGame) {
+      _shufflePieces();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
