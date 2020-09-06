@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'dart:math';
 
+import './game.dart';
 import './board.dart';
 
 void main() {
@@ -30,144 +31,115 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const int _pieceCount = 16;
+  static const int _pieceCount = 100;
 
   bool _newGame = true;
 
-  Map _game = {
-    0: {
-      't': 0,
-      'r': 1,
-      'b': 1,
-      'l': 0,
-      'c': 0,
-      's': 0,
-    },
-    1: {
-      't': 0,
-      'r': 0,
-      'b': 1,
-      'l': 1,
-      'c': 0,
-      's': 0,
-    },
-    2: {
-      't': 0,
-      'r': 1,
-      'b': 1,
-      'l': 0,
-      'c': 0,
-      's': 0,
-    },
-    3: {
-      't': 0,
-      'r': 0,
-      'b': 1,
-      'l': 1,
-      'c': 0,
-      's': 0,
-    },
-    4: {
-      't': 1,
-      'r': 1,
-      'b': 0,
-      'l': 0,
-      'c': 0,
-      's': 0,
-    },
-    5: {
-      't': 1,
-      'r': 1,
-      'b': 1,
-      'l': 1,
-      'c': 1,
-      's': 0,
-    },
-    6: {
-      't': 1,
-      'r': 1,
-      'b': 1,
-      'l': 1,
-      'c': 2,
-      's': 0,
-    },
-    7: {
-      't': 1,
-      'r': 0,
-      'b': 0,
-      'l': 1,
-      'c': 1,
-      's': 0,
-    },
-    8: {
-      't': 0,
-      'r': 1,
-      'b': 1,
-      'l': 0,
-      'c': 0,
-      's': 0,
-    },
-    9: {
-      't': 1,
-      'r': 1,
-      'b': 1,
-      'l': 1,
-      'c': 2,
-      's': 0,
-    },
-    10: {
-      't': 1,
-      'r': 1,
-      'b': 1,
-      'l': 1,
-      'c': 1,
-      's': 0,
-    },
-    11: {
-      't': 0,
-      'r': 0,
-      'b': 1,
-      'l': 1,
-      'c': 0,
-      's': 0,
-    },
-    12: {
-      't': 1,
-      'r': 1,
-      'b': 0,
-      'l': 0,
-      'c': 0,
-      's': 0,
-    },
-    13: {
-      't': 1,
-      'r': 0,
-      'b': 0,
-      'l': 1,
-      'c': 0,
-      's': 0,
-    },
-    14: {
-      't': 1,
-      'r': 1,
-      'b': 0,
-      'l': 0,
-      'c': 0,
-      's': 0,
-    },
-    15: {
-      't': 1,
-      'r': 0,
-      'b': 0,
-      'l': 1,
-      'c': 0,
-      's': 0,
-    },
-  };
+  // Map _game = Game;
+  Map _game;
 
   int _lastSelected;
 
-  bool _solved = true;
+  // bool _solved = true;
+
+  Map _makeNewGame() {
+    Map game = {
+      for (int i = 0; i < _pieceCount; i++)
+        i: {
+          't': 0,
+          'r': 0,
+          'b': 0,
+          'l': 0,
+          'c': 0,
+          's': 0,
+        },
+    };
+
+    int root = (sqrt(_pieceCount)).toInt();
+
+    // Start with corners:
+    int A = 0;
+    int B = root - 1;
+    int C = _pieceCount - 1;
+    int D = _pieceCount - root;
+
+    int a = A;
+    int b = B;
+    int c = C;
+    int d = D;
+
+    game = _fillPiece(game, root, a, b, c, d);
+
+    while (a + 1 < B) {
+      a += 1;
+      b += root;
+      c -= 1;
+      d -= root;
+      game = _fillPiece(game, root, a, b, c, d);
+    }
+
+    for (int i = 0; i < root / 2 - 2; i++) {
+      // Next level in:
+      A += (root + 1);
+      B += (root - 1);
+      C -= (root + 1);
+      D -= (root - 1);
+
+      a = A;
+      b = B;
+      c = C;
+      d = D;
+
+      while (a + 1 < B) {
+        a += 1;
+        b += root;
+        c -= 1;
+        d -= root;
+        game = _fillPiece(game, root, a, b, c, d);
+      }
+    }
+
+    _newGame = false;
+    return game;
+  }
+
+  Map _fillPiece(Map game, int root, int a, int b, int c, int d) {
+    final random = Random();
+
+    // Right, bottom for a:
+    game[a]['r'] = random.nextBool() ? 1 : 0;
+    game[a]['b'] = random.nextBool() ? 1 : 0;
+
+    // Matching components:
+    game[a + 1]['l'] = game[a]['r'];
+    game[a + root]['t'] = game[a]['b'];
+
+    // Bottom, left for b:
+    game[b]['b'] = random.nextBool() ? 1 : 0;
+    game[b]['l'] = random.nextBool() ? 1 : 0;
+
+    // Matching components:
+    game[b + root]['t'] = game[b]['b'];
+    game[b - 1]['r'] = game[b]['l'];
+
+    // Left, top for c:
+    game[c]['l'] = random.nextBool() ? 1 : 0;
+    game[c]['t'] = random.nextBool() ? 1 : 0;
+
+    // Matching components:
+    game[c - 1]['r'] = game[c]['l'];
+    game[c - root]['b'] = game[c]['t'];
+
+    // Top, right for d:
+    game[d]['t'] = random.nextBool() ? 1 : 0;
+    game[d]['r'] = random.nextBool() ? 1 : 0;
+
+    // Matching components:
+    game[d - root]['b'] = game[d]['t'];
+    game[d + 1]['l'] = game[d]['r'];
+
+    return game;
+  }
 
   bool _isSolved() {
     for (int i = 0; i < _pieceCount; i++) {
@@ -187,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _tempGame[_indexOrder[i]] = _game[i];
       }
       _game = _tempGame;
-      _newGame = false;
+      // _newGame = false;
 
       for (int i = 0; i < _pieceCount; i++) {
         _checkConnections(i);
@@ -196,8 +168,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _checkConnectHelper(int indexA, int indexB, String partA, String partB) {
-    // print('A: $indexA, $partA = ${_game[indexA][partA]}');
-    // print('B: $indexB, $partB = ${_game[indexB][partB]}');
     // nothing here to connect:
     if (_game[indexA][partA] == 0 && _game[indexB][partB] == 0) {
     }
@@ -214,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _checkConnections(int index) {
     // Side length = square root of length
-    int root = (math.sqrt(_pieceCount)).toInt();
+    int root = (sqrt(_pieceCount)).toInt();
 
     // Above:
     if (index - root >= 0) {
@@ -269,10 +239,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _resetNewGame() {
+    setState(() {
+      _newGame = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_newGame) {
-      _shufflePieces();
+      _game = _makeNewGame();
+      // _shufflePieces();
     }
 
     return Scaffold(
@@ -284,6 +261,10 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Board(count: _pieceCount, pieces: _game, func: _onPieceTapped),
+            RaisedButton(
+              onPressed: _resetNewGame,
+              child: Text('New Game'),
+            )
           ],
         ),
       ),

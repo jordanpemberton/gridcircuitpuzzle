@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './gamepiece.dart';
+import 'dart:math';
 
 class Board extends StatelessWidget {
   Board({
@@ -13,7 +14,7 @@ class Board extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: GridView.count(
-        crossAxisCount: 4,
+        crossAxisCount: (sqrt(count)).toInt(),
         shrinkWrap: true,
         padding: EdgeInsets.all(10.0),
         physics: NeverScrollableScrollPhysics(),
