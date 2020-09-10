@@ -30,7 +30,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const int _sideLen = 8;
+  // The size of the board:
+  static const int _sideLen = 5;
 
   int _boardLen = _sideLen * _sideLen;
 
@@ -50,7 +51,24 @@ class _MyHomePageState extends State<MyHomePage> {
     _shufflePieces();
   }
 
+  bool _isSolved() {
+    for (int i = 0; i < _boardLen; i++) {
+      if (_game[i].containsValue(-1)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   Map _makeRelationsMap() {
+    // Each entry for index n contains companion indexes and sides for each of n's sides,
+    // where 0 = top, 1 = right, 2 = bottom, 3 = left.
+    // For example on a 4 x 4 grid:
+    //    2: {  0: false,     // Above: none
+    //          1: [3, 3],    // To right: index 3's left arm
+    //          2: [6, 0],    // Below: index 6's top arm
+    //          3: [1, 1]   } // To left: index 1's right arm
+    
     Map relations = {
       for (int i = 0; i < _boardLen; i++)
         i: {
@@ -65,8 +83,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Map _makeNewGame() {
+    // For each index (piece) on board, fill all arms (sides) wherever a companion piece exists.
+    // Then call _removeArms(game) to remove arm pairs.
+    // Set _newGame to false, and return game.
+
     final rand = Random();
-    
+
     Map game = {
       for (int i = 0; i < _boardLen; i++)
         i: {
@@ -88,9 +110,16 @@ class _MyHomePageState extends State<MyHomePage> {
     return game;
   }
 
+
   Map _removeArms(Map game) {
+    // Choose random index, and if that piece has 3+ sides, 
+    // choose a random side (arm) to remove.
+    // If a companion piece/side exists, remove as well. 
+    // Return game.
     final rand = Random();
+
     int rIndex = rand.nextInt(_boardLen);
+    
     if (game[rIndex][0] + game[rIndex][1] + game[rIndex][2] + game[rIndex][3] >
         2) {
       int rSide = rand.nextInt(4);
@@ -105,8 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return game;
   }
 
-  
   void _findIslands(Map game) {
+    // To determine if all pieces are connected.
     List visit = _findIslandsHelper(game, 0, [], []);
     print(visit);
   }
@@ -149,16 +178,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return visited;
   }
 
-  bool _isSolved() {
-    for (int i = 0; i < _boardLen; i++) {
-      if (_game[i].containsValue(-1)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   void _shufflePieces() {
+    // Shuffle index order /assign _game children new indexes.
     List _indexOrder = [for (int i = 0; i < _boardLen; i++) i];
     Map _tempGame = {};
     setState(() {
@@ -174,20 +195,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-void _checkConnections(int index) {
+  void _checkConnections(int index) {
+    // Given an index, check if each side is connected to it's companion.
+    // If connected, set each arm to 1, if not, set to -1 if arm exists, 0 if no arm.
     var companion;
     for (int j = 0; j < 4; j++) {
       companion = _relations[index][j];
       // No partner piece:
       if (companion == false) {
         _game[index][j] = _game[index][j] == 0 ? 0 : -1;
-      } 
-      else {
+      } else {
         // Either one or both are empty -> no connection:
         if (_game[index][j] * _game[companion[0]][companion[1]] == 0) {
           _game[index][j] = _game[index][j] == 0 ? 0 : -1;
-          _game[companion[0]][companion[1]] = _game[companion[0]][companion[1]] == 0 ? 0 : -1;
-        } 
+          _game[companion[0]][companion[1]] =
+              _game[companion[0]][companion[1]] == 0 ? 0 : -1;
+        }
         // Connected!
         else {
           _game[index][j] = 1;
