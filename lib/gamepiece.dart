@@ -17,7 +17,7 @@ class GamePiece extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool allConnect = data['t'] >= 0 && data['r'] >= 0 && data['b'] >= 0 && data['l'] >= 0;
+    bool allConnect = data[0] >= 0 && data[1] >= 0 && data[2] >= 0 && data[3] >= 0;
 
     return Padding(
       padding: const EdgeInsets.all(2.0),
@@ -43,12 +43,12 @@ class GamePiece extends StatelessWidget {
               // TOP
               Align(
                 alignment: Alignment.topCenter,
-                child: data['t'] != 0
+                child: data[0] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          localConnect: data['t'] == 1,
+                          localConnect: data[0] == 1,
                           allConnect: allConnect,
                           rotation: 0,
                         ),
@@ -58,12 +58,12 @@ class GamePiece extends StatelessWidget {
               // RIGHT
               Align(
                 alignment: Alignment.centerRight,
-                child: data['r'] != 0
+                child: data[1] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          localConnect: data['r'] == 1,
+                          localConnect: data[1] == 1,
                           allConnect: allConnect,
                           rotation: math.pi / 2,
                         ),
@@ -73,12 +73,12 @@ class GamePiece extends StatelessWidget {
               // BOTTOM
               Align(
                 alignment: Alignment.bottomCenter,
-                child: data['b'] != 0
+                child: data[2] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          localConnect: data['b'] == 1,
+                          localConnect: data[2] == 1,
                           allConnect: allConnect,
                           rotation: math.pi,
                         ),
@@ -88,12 +88,12 @@ class GamePiece extends StatelessWidget {
               // TOP
               Align(
                 alignment: Alignment.centerLeft,
-                child: data['l'] != 0
+                child: data[3] != 0
                     ? FractionallySizedBox(
                         widthFactor: 1 / 3,
                         heightFactor: 1 / 3,
                         child: PieceArm(
-                          localConnect: data['l'] == 1,
+                          localConnect: data[3] == 1,
                           allConnect: allConnect,
                           rotation: math.pi * 1.5,
                         ),

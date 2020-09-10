@@ -10,33 +10,33 @@ class PieceCenter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool allFour = (data['t']).abs() + (data['r']).abs() + (data['b']).abs() + (data['l']).abs() == 4;
-    bool allConnect = data['t'] >= 0 && data['r'] >= 0 && data['b'] >= 0 && data['l'] >= 0;
+    bool allFour = (data[0]).abs() + (data[1]).abs() + (data[2]).abs() + (data[3]).abs() == 4;
+    bool allConnect = data[0] >= 0 && data[1] >= 0 && data[2] >= 0 && data[3] >= 0;
 
     return Stack(
       children: [
-        if (data['t'] == 0 || allFour && data['c'] == 2)
+        if (data[0] == 0 || allFour && data['c'] == 2)
           PiecePart(
             align: Alignment.topCenter,
             widthf: 1 / 2,
             heightf: 1 / 4,
             hglt: allConnect,
           ),
-        if (data['r'] == 0 || allFour && data['c'] == 1)
+        if (data[1] == 0 || allFour && data['c'] == 1)
           PiecePart(
             align: Alignment.centerRight,
             widthf: 1 / 4,
             heightf: 1 / 2,
             hglt: allConnect,
           ),
-        if (data['b'] == 0 || allFour && data['c'] == 2)
+        if (data[2] == 0 || allFour && data['c'] == 2)
           PiecePart(
             align: Alignment.bottomCenter,
             widthf: 1 / 2,
             heightf: 1 / 4,
             hglt: allConnect,
           ),
-        if (data['l'] == 0 || allFour && data['c'] == 1)
+        if (data[3] == 0 || allFour && data['c'] == 1)
           PiecePart(
             align: Alignment.centerLeft,
             widthf: 1 / 4,

@@ -1,4 +1,4 @@
-Map Game = {
+Map game = {
     0: {
       't': 0,
       'r': 1,

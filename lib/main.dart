@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import './game.dart';
 import './board.dart';
 
 void main() {
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'My Puzzle Game',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Circuit Connect'),
@@ -31,118 +30,127 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const int _pieceCount = 100;
+  static const int _sideLen = 8;
+
+  int _boardLen = _sideLen * _sideLen;
 
   bool _newGame = true;
 
-  // Map _game = Game;
+  Map _relations;
+
   Map _game;
 
   int _lastSelected;
 
   // bool _solved = true;
 
-  Map _makeNewGame() {
-    Map game = {
-      for (int i = 0; i < _pieceCount; i++)
+  void _initNewGame() {
+    _relations = _makeRelationsMap();
+    _game = _makeNewGame();
+    _shufflePieces();
+  }
+
+  Map _makeRelationsMap() {
+    Map relations = {
+      for (int i = 0; i < _boardLen; i++)
         i: {
-          't': 0,
-          'r': 0,
-          'b': 0,
-          'l': 0,
-          'c': 0,
+          // 0 = Above, 1 = Right, 2 = Below, 3 = Left
+          0: i < _sideLen ? false : [i - _sideLen, 2],
+          1: (i + 1) % _sideLen == 0 ? false : [i + 1, 3],
+          2: i >= (_boardLen - _sideLen) ? false : [i + _sideLen, 0],
+          3: i % _sideLen == 0 ? false : [i - 1, 1],
+        }
+    };
+    return relations;
+  }
+
+  Map _makeNewGame() {
+    final rand = Random();
+    
+    Map game = {
+      for (int i = 0; i < _boardLen; i++)
+        i: {
+          // 0 = Top, 1 = Right, 2 = Bottom, 3 = Left
+          0: _relations[i][0] == false ? 0 : 1,
+          1: _relations[i][1] == false ? 0 : 1,
+          2: _relations[i][2] == false ? 0 : 1,
+          3: _relations[i][3] == false ? 0 : 1,
+          'c': rand.nextBool() ? 1 : 2,
           's': 0,
         },
     };
 
-    int root = (sqrt(_pieceCount)).toInt();
-
-    // Start with corners:
-    int A = 0;
-    int B = root - 1;
-    int C = _pieceCount - 1;
-    int D = _pieceCount - root;
-
-    int a = A;
-    int b = B;
-    int c = C;
-    int d = D;
-
-    game = _fillPiece(game, root, a, b, c, d);
-
-    while (a + 1 < B) {
-      a += 1;
-      b += root;
-      c -= 1;
-      d -= root;
-      game = _fillPiece(game, root, a, b, c, d);
-    }
-
-    for (int i = 0; i < root / 2 - 2; i++) {
-      // Next level in:
-      A += (root + 1);
-      B += (root - 1);
-      C -= (root + 1);
-      D -= (root - 1);
-
-      a = A;
-      b = B;
-      c = C;
-      d = D;
-
-      while (a + 1 < B) {
-        a += 1;
-        b += root;
-        c -= 1;
-        d -= root;
-        game = _fillPiece(game, root, a, b, c, d);
-      }
+    for (int i = 0; i < _boardLen; i++) {
+      _removeArms(game);
     }
 
     _newGame = false;
     return game;
   }
 
-  Map _fillPiece(Map game, int root, int a, int b, int c, int d) {
-    final random = Random();
-
-    // Right, bottom for a:
-    game[a]['r'] = random.nextBool() ? 1 : 0;
-    game[a]['b'] = random.nextBool() ? 1 : 0;
-
-    // Matching components:
-    game[a + 1]['l'] = game[a]['r'];
-    game[a + root]['t'] = game[a]['b'];
-
-    // Bottom, left for b:
-    game[b]['b'] = random.nextBool() ? 1 : 0;
-    game[b]['l'] = random.nextBool() ? 1 : 0;
-
-    // Matching components:
-    game[b + root]['t'] = game[b]['b'];
-    game[b - 1]['r'] = game[b]['l'];
-
-    // Left, top for c:
-    game[c]['l'] = random.nextBool() ? 1 : 0;
-    game[c]['t'] = random.nextBool() ? 1 : 0;
-
-    // Matching components:
-    game[c - 1]['r'] = game[c]['l'];
-    game[c - root]['b'] = game[c]['t'];
-
-    // Top, right for d:
-    game[d]['t'] = random.nextBool() ? 1 : 0;
-    game[d]['r'] = random.nextBool() ? 1 : 0;
-
-    // Matching components:
-    game[d - root]['b'] = game[d]['t'];
-    game[d + 1]['l'] = game[d]['r'];
-
+  Map _removeArms(Map game) {
+    final rand = Random();
+    int rIndex = rand.nextInt(_boardLen);
+    if (game[rIndex][0] + game[rIndex][1] + game[rIndex][2] + game[rIndex][3] >
+        2) {
+      int rSide = rand.nextInt(4);
+      game[rIndex][rSide] = 0;
+      var companion = _relations[rIndex][rSide];
+      if (companion != false) {
+        var companIndex = companion[0];
+        var companSide = companion[1];
+        game[companIndex][companSide] = 0;
+      }
+    }
     return game;
   }
 
+  
+  void _findIslands(Map game) {
+    List visit = _findIslandsHelper(game, 0, [], []);
+    print(visit);
+  }
+
+  List _findIslandsHelper(Map game, int i, List visited, List toCheck) {
+    print(visited);
+    print(toCheck);
+    visited.add(i);
+    toCheck.remove(i);
+
+    if (game[i][0] + game[i][1] + game[i][2] + game[i][3] == 0) {
+      return visited;
+    }
+
+    int j = 0;
+    while (j < 4) {
+      if (game[i][j] != 0) {
+        if (j == 0 && !visited.contains(i - _sideLen)) {
+          toCheck.add(i - _sideLen);
+          // return _findIslandsHelper(game, i - _sideLen, visited);
+        } else if (j == 1 && !visited.contains(i + 1)) {
+          toCheck.add(i + 1);
+          // return _findIslandsHelper(game, i + 1, visited);
+        } else if (j == 2 && !visited.contains(i + _sideLen)) {
+          toCheck.add(i + _sideLen);
+          // return _findIslandsHelper(game, i + _sideLen, visited);
+        } else if (j == 3 && !visited.contains(i - 1)) {
+          toCheck.add(i - 1);
+          // return _findIslandsHelper(game, i - 1, visited);
+        }
+      } else {
+        j += 1;
+      }
+      print(toCheck);
+      if (toCheck.length > 0) {
+        return _findIslandsHelper(game, toCheck[0], visited, toCheck);
+      }
+    }
+
+    return visited;
+  }
+
   bool _isSolved() {
-    for (int i = 0; i < _pieceCount; i++) {
+    for (int i = 0; i < _boardLen; i++) {
       if (_game[i].containsValue(-1)) {
         return false;
       }
@@ -151,67 +159,41 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _shufflePieces() {
-    List _indexOrder = [for (int i = 0; i < _pieceCount; i++) i];
+    List _indexOrder = [for (int i = 0; i < _boardLen; i++) i];
     Map _tempGame = {};
     setState(() {
       _indexOrder.shuffle();
-      for (int i = 0; i < _pieceCount; i++) {
+      for (int i = 0; i < _boardLen; i++) {
         _tempGame[_indexOrder[i]] = _game[i];
       }
       _game = _tempGame;
-      // _newGame = false;
 
-      for (int i = 0; i < _pieceCount; i++) {
+      for (int i = 0; i < _boardLen; i++) {
         _checkConnections(i);
       }
     });
   }
 
-  void _checkConnectHelper(int indexA, int indexB, String partA, String partB) {
-    // nothing here to connect:
-    if (_game[indexA][partA] == 0 && _game[indexB][partB] == 0) {
-    }
-    // not connected:
-    else if (_game[indexA][partA] * _game[indexB][partB] == 0) {
-      _game[indexA][partA] = _game[indexA][partA] == 0 ? 0 : -1;
-      _game[indexB][partB] = _game[indexB][partB] == 0 ? 0 : -1;
-      // connected?
-    } else {
-      _game[indexA][partA] = 1;
-      _game[indexB][partB] = 1;
-    }
-  }
-
-  void _checkConnections(int index) {
-    // Side length = square root of length
-    int root = (sqrt(_pieceCount)).toInt();
-
-    // Above:
-    if (index - root >= 0) {
-      _checkConnectHelper(index, index - root, 't', 'b');
-    } else {
-      _game[index]['t'] = _game[index]['t'] == 0 ? 0 : -1;
-    }
-
-    // Below:
-    if (index + root < _pieceCount) {
-      _checkConnectHelper(index, index + root, 'b', 't');
-    } else {
-      _game[index]['b'] = _game[index]['b'] == 0 ? 0 : -1;
-    }
-
-    // To left:
-    if (index - 1 >= 0 && (index % root != 0)) {
-      _checkConnectHelper(index, index - 1, 'l', 'r');
-    } else {
-      _game[index]['l'] = _game[index]['l'] == 0 ? 0 : -1;
-    }
-
-    // To right:
-    if (((index + 1) < _pieceCount) && ((index + 1) % root != 0)) {
-      _checkConnectHelper(index, index + 1, 'r', 'l');
-    } else {
-      _game[index]['r'] = _game[index]['r'] == 0 ? 0 : -1;
+void _checkConnections(int index) {
+    var companion;
+    for (int j = 0; j < 4; j++) {
+      companion = _relations[index][j];
+      // No partner piece:
+      if (companion == false) {
+        _game[index][j] = _game[index][j] == 0 ? 0 : -1;
+      } 
+      else {
+        // Either one or both are empty -> no connection:
+        if (_game[index][j] * _game[companion[0]][companion[1]] == 0) {
+          _game[index][j] = _game[index][j] == 0 ? 0 : -1;
+          _game[companion[0]][companion[1]] = _game[companion[0]][companion[1]] == 0 ? 0 : -1;
+        } 
+        // Connected!
+        else {
+          _game[index][j] = 1;
+          _game[companion[0]][companion[1]] = 1;
+        }
+      }
     }
   }
 
@@ -248,8 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     if (_newGame) {
-      _game = _makeNewGame();
-      // _shufflePieces();
+      _initNewGame();
     }
 
     return Scaffold(
@@ -260,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Board(count: _pieceCount, pieces: _game, func: _onPieceTapped),
+            Board(count: _boardLen, pieces: _game, func: _onPieceTapped),
             RaisedButton(
               onPressed: _resetNewGame,
               child: Text('New Game'),
