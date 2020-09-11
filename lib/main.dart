@@ -31,19 +31,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // The size of the board:
-  static const int _sideLen = 5;
-
+  static const int _sideLen = 4;
   int _boardLen = _sideLen * _sideLen;
 
   bool _newGame = true;
+  // bool _solved = true;
 
   Map _relations;
-
   Map _game;
 
   int _lastSelected;
-
-  // bool _solved = true;
 
   void _initNewGame() {
     _relations = _makeRelationsMap();
@@ -68,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //          1: [3, 3],    // To right: index 3's left arm
     //          2: [6, 0],    // Below: index 6's top arm
     //          3: [1, 1]   } // To left: index 1's right arm
-    
+
     Map relations = {
       for (int i = 0; i < _boardLen; i++)
         i: {
@@ -112,23 +109,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Map _removeArms(Map game) {
-    // Choose random index, and if that piece has 3+ sides, 
-    // choose a random side (arm) to remove.
-    // If a companion piece/side exists, remove as well. 
-    // Return game.
-    final rand = Random();
+    // Choose random index, and if that piece has 3+ arms,
+    // choose a random arm to remove.
+    // If a companion piece/side exists, and companion side also has 3+ arms,
+    // remove both arms and return game.
 
+    final rand = Random();
     int rIndex = rand.nextInt(_boardLen);
-    
+
     if (game[rIndex][0] + game[rIndex][1] + game[rIndex][2] + game[rIndex][3] >
         2) {
       int rSide = rand.nextInt(4);
-      game[rIndex][rSide] = 0;
       var companion = _relations[rIndex][rSide];
       if (companion != false) {
         var companIndex = companion[0];
         var companSide = companion[1];
-        game[companIndex][companSide] = 0;
+        if (game[companIndex][0] + game[companIndex][1] + game[companIndex][2] + game[companIndex][3] >
+        2) {
+          game[rIndex][rSide] = 0;
+          game[companIndex][companSide] = 0;
+        }
       }
     }
     return game;
