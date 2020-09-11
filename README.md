@@ -15,7 +15,3 @@
 ![Screengrab Prototype 12x12](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/twelve_1.png)
 
 <br/>
-
-![Screengrab Prototype Larger Grids](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/larger_grids.png)
-
-<br/>
