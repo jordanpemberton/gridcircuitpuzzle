@@ -20,7 +20,9 @@ class PiecePart extends StatelessWidget {
       child: FractionallySizedBox(
         widthFactor: widthf,
         heightFactor: heightf,
-        child: Container(color: hglt ? Colors.red[300] : Colors.grey[900]),
+        child: Container(
+          color: hglt ? Color.fromRGBO(200, 50, 10, 1) : Color.fromRGBO(140, 135, 130, 1),
+        ),
       ),
     );
   }

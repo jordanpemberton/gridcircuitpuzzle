@@ -31,7 +31,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // The size of the board:
-  static const int _sideLen = 4;
+  static const int _sideLen = 8;
   int _boardLen = _sideLen * _sideLen;
 
   bool _newGame = true;
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _initNewGame() {
     _relations = _makeRelationsMap();
     _game = _makeNewGame();
-    _shufflePieces();
+    // _shufflePieces();
   }
 
   bool _isSolved() {
@@ -103,10 +103,13 @@ class _MyHomePageState extends State<MyHomePage> {
       _removeArms(game);
     }
 
-    _newGame = false;
-    return game;
-  }
+    if (_areNoIslands(game)) {
+      _newGame = false;
+      return game;
+    }
 
+    return _makeNewGame();
+  }
 
   Map _removeArms(Map game) {
     // Choose random index, and if that piece has 3+ arms,
@@ -124,8 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
       if (companion != false) {
         var companIndex = companion[0];
         var companSide = companion[1];
-        if (game[companIndex][0] + game[companIndex][1] + game[companIndex][2] + game[companIndex][3] >
-        2) {
+        if (game[companIndex][0] +
+                game[companIndex][1] +
+                game[companIndex][2] +
+                game[companIndex][3] >
+            2) {
           game[rIndex][rSide] = 0;
           game[companIndex][companSide] = 0;
         }
@@ -134,45 +140,45 @@ class _MyHomePageState extends State<MyHomePage> {
     return game;
   }
 
-  void _findIslands(Map game) {
-    // To determine if all pieces are connected.
-    List visit = _findIslandsHelper(game, 0, [], []);
-    print(visit);
+  bool _areNoIslands(Map game) {
+    // Returns true if all pieces on board are connected (no islands)
+    // or else returns false. 
+    List visited = _findIslands(game, 0, [], []);
+
+    // print('visited: $visited');
+    if (visited.length == _boardLen) {
+      print('Length = board size :D No islands');
+      return true;
+    }
+    return false;
   }
 
-  List _findIslandsHelper(Map game, int i, List visited, List toCheck) {
-    print(visited);
-    print(toCheck);
+  List _findIslands(Map game, int i, List visited, List toCheck) {
+    // print('visited: $visited');
+    // print('toCheck: $toCheck');
     visited.add(i);
-    toCheck.remove(i);
+    if (toCheck.contains(i)) {
+      toCheck.remove(i);
+    }
 
     if (game[i][0] + game[i][1] + game[i][2] + game[i][3] == 0) {
       return visited;
     }
 
-    int j = 0;
-    while (j < 4) {
+    for (int j = 0; j < 4; j++) {
       if (game[i][j] != 0) {
-        if (j == 0 && !visited.contains(i - _sideLen)) {
-          toCheck.add(i - _sideLen);
-          // return _findIslandsHelper(game, i - _sideLen, visited);
-        } else if (j == 1 && !visited.contains(i + 1)) {
-          toCheck.add(i + 1);
-          // return _findIslandsHelper(game, i + 1, visited);
-        } else if (j == 2 && !visited.contains(i + _sideLen)) {
-          toCheck.add(i + _sideLen);
-          // return _findIslandsHelper(game, i + _sideLen, visited);
-        } else if (j == 3 && !visited.contains(i - 1)) {
-          toCheck.add(i - 1);
-          // return _findIslandsHelper(game, i - 1, visited);
+        if (_relations[i][j] != false) {
+          if (!visited.contains(_relations[i][j][0])) {
+            if (!toCheck.contains(_relations[i][j][0])) {
+              toCheck.add(_relations[i][j][0]);
+            }
+          }
         }
-      } else {
-        j += 1;
       }
-      print(toCheck);
-      if (toCheck.length > 0) {
-        return _findIslandsHelper(game, toCheck[0], visited, toCheck);
-      }
+    }
+
+    if (toCheck.length > 0) {
+      return _findIslands(game, toCheck[0], visited, toCheck);
     }
 
     return visited;

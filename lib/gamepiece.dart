@@ -20,9 +20,9 @@ class GamePiece extends StatelessWidget {
     bool allConnect = data[0] >= 0 && data[1] >= 0 && data[2] >= 0 && data[3] >= 0;
 
     return Padding(
-      padding: const EdgeInsets.all(1.0),
+      padding: const EdgeInsets.all(1.5),
       child: Container(
-        color: Colors.grey[300],
+        color: Color.fromRGBO(230, 230, 230, 1),
         child: GestureDetector(
           onTap: () {
             return func(index);
@@ -32,12 +32,13 @@ class GamePiece extends StatelessWidget {
           child: Stack(
             children: [
               AnimatedOpacity(
-                opacity: data['s'] == 1 ? 0.4 : 0,
-                duration: Duration(milliseconds: 200),
+                opacity: data['s'] == 1 ? 0.2 : 0,
+                duration: Duration(milliseconds: 250),
                 child: Container(
                   height: double.infinity,
                   width: double.infinity,
-                  color: Colors.blue[200],
+                  color: Color.fromRGBO(255, 90, 30, 1),
+                  // color: Colors.deepOrangeAccent[400],
                 ),
               ),
               // TOP
