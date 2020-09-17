@@ -15,28 +15,28 @@ class PieceCenter extends StatelessWidget {
 
     return Stack(
       children: [
-        if (data[0] == 0 || allFour && data['c'] == 2)
+        if (data[0] == 0 || allFour && data['center'] == 2)
           PiecePart(
             align: Alignment.topCenter,
             widthf: 1 / 2,
             heightf: 1 / 4,
             hglt: allConnect,
           ),
-        if (data[1] == 0 || allFour && data['c'] == 1)
+        if (data[1] == 0 || allFour && data['center'] == 1)
           PiecePart(
             align: Alignment.centerRight,
             widthf: 1 / 4,
             heightf: 1 / 2,
             hglt: allConnect,
           ),
-        if (data[2] == 0 || allFour && data['c'] == 2)
+        if (data[2] == 0 || allFour && data['center'] == 2)
           PiecePart(
             align: Alignment.bottomCenter,
             widthf: 1 / 2,
             heightf: 1 / 4,
             hglt: allConnect,
           ),
-        if (data[3] == 0 || allFour && data['c'] == 1)
+        if (data[3] == 0 || allFour && data['center'] == 1)
           PiecePart(
             align: Alignment.centerLeft,
             widthf: 1 / 4,

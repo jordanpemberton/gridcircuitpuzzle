@@ -94,8 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
           1: _relations[i][1] == false ? 0 : 1,
           2: _relations[i][2] == false ? 0 : 1,
           3: _relations[i][3] == false ? 0 : 1,
-          'c': rand.nextBool() ? 1 : 2,
-          's': 0,
+          'center': rand.nextBool() ? 1 : 2,
+          'select': 0,
+          'drag': 'drag',
         },
     };
 
@@ -142,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _areNoIslands(Map game) {
     // Returns true if all pieces on board are connected (no islands)
-    // or else returns false. 
+    // or else returns false.
     List visited = _findIslands(game, 0, [], []);
 
     // print('visited: $visited');
@@ -229,13 +230,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onPieceTapped(int index) {
     setState(() {
       if (_lastSelected == null) {
-        _game[index]['s'] = 1;
+        _game[index]['select'] = 1;
         _lastSelected = index;
       } else if (_lastSelected == index) {
-        _game[index]['s'] = 0;
+        _game[index]['select'] = 0;
         _lastSelected = null;
       } else {
-        _game[_lastSelected]['s'] = 0;
+        _game[_lastSelected]['select'] = 0;
         Map temp = _game[_lastSelected];
         _game[_lastSelected] = _game[index];
         _game[index] = temp;
@@ -247,6 +248,49 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_isSolved()) {
         print('YOU WIN!');
       }
+    });
+  }
+
+  void _onDragStart(int index) {
+    setState(() {
+      _game.forEach((key, value) {
+        if (key != index) {
+          _game[key]['drag'] = 'target';
+        }
+      });
+      
+      if (_lastSelected != null) {
+        _game[_lastSelected]['select'] = 0;
+        _lastSelected = null;
+      }
+    });
+  }
+
+  void _onDragEnd(DraggableDetails data) {
+    setState(() {
+      _game.forEach((key, value) {
+        _game[key]['drag'] = 'drag';
+      });
+
+      if (_lastSelected != null) {
+        _game[_lastSelected]['select'] = 0;
+        _lastSelected = null;
+      }
+    });
+  }
+
+  void _onDragAccept(int keyA, int keyB) {
+    setState(() {
+      Map temp = _game[keyA];
+      _game[keyA] = _game[keyB];
+      _game[keyB] = temp;
+      
+      _game[keyA]['select'] = 0;
+      _game[keyB]['select'] = 0;
+      _lastSelected = null;
+
+      _checkConnections(keyA);
+      _checkConnections(keyB);
     });
   }
 
@@ -270,7 +314,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Board(count: _boardLen, pieces: _game, func: _onPieceTapped),
+            Board(
+              count: _boardLen,
+              pieces: _game,
+              onTapFunc: _onPieceTapped,
+              onDragStartFunc: _onDragStart,
+              onDragEndFunc: _onDragEnd,
+              onDragAcceptFunc: _onDragAccept,
+            ),
             RaisedButton(
               onPressed: _resetNewGame,
               child: Text('New Game'),
