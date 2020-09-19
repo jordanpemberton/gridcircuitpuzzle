@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// import 'dart:async';
 import 'dart:math';
 
-import './board.dart';
+import 'package:gridcircuitpuzzle/winalert.dart';
+import 'package:gridcircuitpuzzle/board.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,6 +19,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        buttonBarTheme: ButtonBarThemeData(
+          alignment: MainAxisAlignment.spaceAround,
+        ),
       ),
       home: MyHomePage(title: 'Circuit Connect'),
     );
@@ -31,11 +38,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // The size of the board:
-  static const int _sideLen = 8;
+  static const int _sideLen = 4;
   int _boardLen = _sideLen * _sideLen;
 
   bool _newGame = true;
-  // bool _solved = true;
+  bool _solved = false;
 
   Map _relations;
   Map _game;
@@ -43,9 +50,30 @@ class _MyHomePageState extends State<MyHomePage> {
   int _lastSelected;
 
   void _initNewGame() {
+    _solved = false;
     _relations = _makeRelationsMap();
     _game = _makeNewGame();
     // _shufflePieces();
+  }
+
+  void _checkIfSolved() {
+    setState(() {
+      if (_isSolved()) {
+        print('YOU WIN!');
+        _solved = true;
+        showDialog(
+          context: context,
+          builder: (_) {
+            return WinAlert(
+              onHome: _returnHome,
+              onNewGame: _resetNewGame,
+            );
+          },
+        );
+      } else {
+        _solved = false;
+      }
+    });
   }
 
   bool _isSolved() {
@@ -236,18 +264,24 @@ class _MyHomePageState extends State<MyHomePage> {
         _game[index]['select'] = 0;
         _lastSelected = null;
       } else {
-        _game[_lastSelected]['select'] = 0;
+        // _game[_lastSelected]['select'] = 0;
         Map temp = _game[_lastSelected];
         _game[_lastSelected] = _game[index];
         _game[index] = temp;
         _checkConnections(_lastSelected);
         _checkConnections(index);
         _lastSelected = null;
+
+        _game[index]['select'] = 0;
+
+        // Future.delayed(const Duration(milliseconds: 500), () {
+        //   setState(() {
+        //     _game[index]['select'] = 0;
+        //   });
+        // });
       }
       // Check if solved:
-      if (_isSolved()) {
-        print('YOU WIN!');
-      }
+      _checkIfSolved();
     });
   }
 
@@ -258,11 +292,13 @@ class _MyHomePageState extends State<MyHomePage> {
           _game[key]['drag'] = 'target';
         }
       });
-      
+
       if (_lastSelected != null) {
         _game[_lastSelected]['select'] = 0;
         _lastSelected = null;
       }
+
+      // _game[index]['select'] = 1;
     });
   }
 
@@ -284,18 +320,28 @@ class _MyHomePageState extends State<MyHomePage> {
       Map temp = _game[keyA];
       _game[keyA] = _game[keyB];
       _game[keyB] = temp;
-      
+
       _game[keyA]['select'] = 0;
       _game[keyB]['select'] = 0;
       _lastSelected = null;
 
       _checkConnections(keyA);
       _checkConnections(keyB);
+
+      _checkIfSolved();
+    });
+  }
+
+  void _returnHome() {
+    setState(() {
+      _solved = false;
+      _newGame = true;
     });
   }
 
   void _resetNewGame() {
     setState(() {
+      _solved = false;
       _newGame = true;
     });
   }
@@ -325,7 +371,7 @@ class _MyHomePageState extends State<MyHomePage> {
             RaisedButton(
               onPressed: _resetNewGame,
               child: Text('New Game'),
-            )
+            ),
           ],
         ),
       ),

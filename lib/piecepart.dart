@@ -21,7 +21,7 @@ class PiecePart extends StatelessWidget {
         widthFactor: widthf,
         heightFactor: heightf,
         child: Container(
-          color: hglt ? Color.fromRGBO(200, 50, 10, 1) : Color.fromRGBO(140, 135, 130, 1),
+          color: hglt ? Colors.red[400] : Colors.grey[600],
         ),
       ),
     );

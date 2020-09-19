@@ -18,14 +18,14 @@ class PieceTile extends StatelessWidget {
 
     return Stack(
       children: [
+        if (data['select'] == 1) 
         AnimatedOpacity(
-          opacity: data['select'] == 1 ? 0.2 : 0,
-          duration: Duration(milliseconds: 250),
+          opacity: 0.2,
+          duration: Duration(milliseconds: 500),
           child: Container(
             height: double.infinity,
             width: double.infinity,
-            color: Color.fromRGBO(255, 90, 30, 1),
-            // color: Colors.deepOrangeAccent[400],
+            color: Colors.red,
           ),
         ),
         // TOP
