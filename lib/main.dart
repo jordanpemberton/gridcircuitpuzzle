@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gridcircuitpuzzle/game_board.dart';
 
 // import 'dart:async';
 import 'dart:math';
@@ -38,21 +39,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // The size of the board:
-  static const int _sideLen = 4;
-  int _boardLen = _sideLen * _sideLen;
+  static int _sideLen = 6;
+  static int _boardLen = _sideLen * _sideLen;
+
+  Map _relations;
+  Map _pieceMap;
+  List _pieceList = new List(_boardLen);
 
   bool _newGame = true;
   bool _solved = false;
-
-  Map _relations;
-  Map _game;
-
   int _lastSelected;
 
   void _initNewGame() {
     _solved = false;
     _relations = _makeRelationsMap();
-    _game = _makeNewGame();
+    _pieceMap = _makePieceMap();
+    _makePieceList();
     // _shufflePieces();
   }
 
@@ -78,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _isSolved() {
     for (int i = 0; i < _boardLen; i++) {
-      if (_game[i].containsValue(-1)) {
+      if (_pieceMap[i].containsValue(-1)) {
         return false;
       }
     }
@@ -107,7 +109,19 @@ class _MyHomePageState extends State<MyHomePage> {
     return relations;
   }
 
-  Map _makeNewGame() {
+  void _makePieceList() {
+    _pieceMap.forEach((key, value) {
+      List piece = [
+        value[0],
+        value[1],
+        value[2],
+        value[3],
+      ];
+      _pieceList[key] = piece;
+    });
+  }
+
+  Map _makePieceMap() {
     // For each index (piece) on board, fill all arms (sides) wherever a companion piece exists.
     // Then call _removeArms(game) to remove arm pairs.
     // Set _newGame to false, and return game.
@@ -137,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return game;
     }
 
-    return _makeNewGame();
+    return _makePieceMap();
   }
 
   Map _removeArms(Map game) {
@@ -214,15 +228,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _shufflePieces() {
-    // Shuffle index order /assign _game children new indexes.
+    // Shuffle index order /assign _pieceMap children new indexes.
     List _indexOrder = [for (int i = 0; i < _boardLen; i++) i];
     Map _tempGame = {};
     setState(() {
       _indexOrder.shuffle();
       for (int i = 0; i < _boardLen; i++) {
-        _tempGame[_indexOrder[i]] = _game[i];
+        _tempGame[_indexOrder[i]] = _pieceMap[i];
       }
-      _game = _tempGame;
+      _pieceMap = _tempGame;
 
       for (int i = 0; i < _boardLen; i++) {
         _checkConnections(i);
@@ -238,18 +252,18 @@ class _MyHomePageState extends State<MyHomePage> {
       companion = _relations[index][j];
       // No partner piece:
       if (companion == false) {
-        _game[index][j] = _game[index][j] == 0 ? 0 : -1;
+        _pieceMap[index][j] = _pieceMap[index][j] == 0 ? 0 : -1;
       } else {
         // Either one or both are empty -> no connection:
-        if (_game[index][j] * _game[companion[0]][companion[1]] == 0) {
-          _game[index][j] = _game[index][j] == 0 ? 0 : -1;
-          _game[companion[0]][companion[1]] =
-              _game[companion[0]][companion[1]] == 0 ? 0 : -1;
+        if (_pieceMap[index][j] * _pieceMap[companion[0]][companion[1]] == 0) {
+          _pieceMap[index][j] = _pieceMap[index][j] == 0 ? 0 : -1;
+          _pieceMap[companion[0]][companion[1]] =
+              _pieceMap[companion[0]][companion[1]] == 0 ? 0 : -1;
         }
         // Connected!
         else {
-          _game[index][j] = 1;
-          _game[companion[0]][companion[1]] = 1;
+          _pieceMap[index][j] = 1;
+          _pieceMap[companion[0]][companion[1]] = 1;
         }
       }
     }
@@ -258,25 +272,25 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onPieceTapped(int index) {
     setState(() {
       if (_lastSelected == null) {
-        _game[index]['select'] = 1;
+        _pieceMap[index]['select'] = 1;
         _lastSelected = index;
       } else if (_lastSelected == index) {
-        _game[index]['select'] = 0;
+        _pieceMap[index]['select'] = 0;
         _lastSelected = null;
       } else {
-        // _game[_lastSelected]['select'] = 0;
-        Map temp = _game[_lastSelected];
-        _game[_lastSelected] = _game[index];
-        _game[index] = temp;
+        // _pieceMap[_lastSelected]['select'] = 0;
+        Map temp = _pieceMap[_lastSelected];
+        _pieceMap[_lastSelected] = _pieceMap[index];
+        _pieceMap[index] = temp;
         _checkConnections(_lastSelected);
         _checkConnections(index);
         _lastSelected = null;
 
-        _game[index]['select'] = 0;
+        _pieceMap[index]['select'] = 0;
 
         // Future.delayed(const Duration(milliseconds: 500), () {
         //   setState(() {
-        //     _game[index]['select'] = 0;
+        //     _pieceMap[index]['select'] = 0;
         //   });
         // });
       }
@@ -287,29 +301,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onDragStart(int index) {
     setState(() {
-      _game.forEach((key, value) {
+      _pieceMap.forEach((key, value) {
         if (key != index) {
-          _game[key]['drag'] = 'target';
+          _pieceMap[key]['drag'] = 'target';
         }
       });
 
       if (_lastSelected != null) {
-        _game[_lastSelected]['select'] = 0;
+        _pieceMap[_lastSelected]['select'] = 0;
         _lastSelected = null;
       }
 
-      // _game[index]['select'] = 1;
+      // _pieceMap[index]['select'] = 1;
     });
   }
 
   void _onDragEnd(DraggableDetails data) {
     setState(() {
-      _game.forEach((key, value) {
-        _game[key]['drag'] = 'drag';
+      _pieceMap.forEach((key, value) {
+        _pieceMap[key]['drag'] = 'drag';
       });
 
       if (_lastSelected != null) {
-        _game[_lastSelected]['select'] = 0;
+        _pieceMap[_lastSelected]['select'] = 0;
         _lastSelected = null;
       }
     });
@@ -317,12 +331,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onDragAccept(int keyA, int keyB) {
     setState(() {
-      Map temp = _game[keyA];
-      _game[keyA] = _game[keyB];
-      _game[keyB] = temp;
+      Map temp = _pieceMap[keyA];
+      _pieceMap[keyA] = _pieceMap[keyB];
+      _pieceMap[keyB] = temp;
 
-      _game[keyA]['select'] = 0;
-      _game[keyB]['select'] = 0;
+      _pieceMap[keyA]['select'] = 0;
+      _pieceMap[keyB]['select'] = 0;
       _lastSelected = null;
 
       _checkConnections(keyA);
@@ -357,22 +371,35 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Board(
-              count: _boardLen,
-              pieces: _game,
-              onTapFunc: _onPieceTapped,
-              onDragStartFunc: _onDragStart,
-              onDragEndFunc: _onDragEnd,
-              onDragAcceptFunc: _onDragAccept,
-            ),
-            RaisedButton(
-              onPressed: _resetNewGame,
-              child: Text('New Game'),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Board(
+              //   count: _boardLen,
+              //   pieces: _pieceMap,
+              //   onTapFunc: _onPieceTapped,
+              //   onDragStartFunc: _onDragStart,
+              //   onDragEndFunc: _onDragEnd,
+              //   onDragAcceptFunc: _onDragAccept,
+              // ),
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: 20,
+                ),
+                child: GameBoard(
+                  size: _sideLen,
+                  pieces: _pieceList,
+                  callbacks: {},
+                ),
+              ),
+              RaisedButton(
+                onPressed: _resetNewGame,
+                child: Text('New Game'),
+              ),
+            ],
+          ),
         ),
       ),
     );
