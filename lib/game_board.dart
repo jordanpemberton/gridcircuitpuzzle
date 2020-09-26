@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import './board_expanded_row.dart';
+import 'package:gridcircuitpuzzle/app_colors.dart';
+import 'package:gridcircuitpuzzle/board_expanded_row.dart';
 
 class GameBoard extends StatelessWidget {
   GameBoard({
@@ -10,7 +11,7 @@ class GameBoard extends StatelessWidget {
 
   final List pieces;
   final int size;
-  final Map callbacks;
+  final Map<String, Function> callbacks;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class GameBoard extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(4.0),
         decoration: BoxDecoration(
-          color: Colors.red[100],
+          color: AppColors.BOARD_BG_CLR,
           borderRadius: BorderRadius.circular(5.0),
         ),
         child: Column(

@@ -44,9 +44,9 @@ app.*.map.json
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 # lib files
-board_draft.dart 
-gamepiece.dart 
-piecearm.dart 
+board_draft.dart
+gamepiece.dart
+piecearm.dart
 piececenter.dart 
 piecepart.dart
 piecetile.dart

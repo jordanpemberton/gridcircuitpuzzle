@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'game_board.dart';
-import 'winalert.dart';
+import 'win_alert.dart';
 
 class GameScreen extends StatefulWidget {
   GameScreen({Key key, this.title}) : super(key: key);
@@ -30,8 +30,8 @@ class _GameState extends State<GameScreen> {
     _solved = false;
     _relations = _makeRelationsMap();
     _pieceMap = _makePieceMap();
+    _shufflePieces();
     _makePieceList();
-    // _shufflePieces();
   }
 
   void _checkIfSolved() {
@@ -166,7 +166,6 @@ class _GameState extends State<GameScreen> {
 
     // print('visited: $visited');
     if (visited.length == _boardLen) {
-      print('Length = board size :D No islands');
       return true;
     }
     return false;
@@ -246,6 +245,7 @@ class _GameState extends State<GameScreen> {
   }
 
   void _onTap(int index) {
+    print('$index TAPPED');
     setState(() {
       if (_lastSelected == null) {
         _pieceMap[index]['select'] = 1;
@@ -352,14 +352,6 @@ class _GameState extends State<GameScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Board(
-              //   count: _boardLen,
-              //   pieces: _pieceMap,
-              //   onTapFunc: _onPieceTapped,
-              //   onDragStartFunc: _onDragStart,
-              //   onDragEndFunc: _onDragEnd,
-              //   onDragAcceptFunc: _onDragAccept,
-              // ),
               Padding(
                 padding: EdgeInsets.only(
                   bottom: 20,

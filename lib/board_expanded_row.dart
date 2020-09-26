@@ -8,7 +8,7 @@ class BoardExpandedRow extends StatelessWidget {
   );
 
   final List pieces;
-  final Map callbacks;
+  final Map<String, Function> callbacks;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +18,7 @@ class BoardExpandedRow extends StatelessWidget {
         children: [
           for (int i = 0; i < pieces.length; i++)
             BoardExpandedRowItem(
+              i,
               this.pieces[i],
               this.callbacks,
             ),
