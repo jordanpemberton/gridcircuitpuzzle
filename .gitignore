@@ -47,6 +47,6 @@ app.*.map.json
 board_draft.dart 
 gamepiece.dart 
 piecearm.dart 
-piececenter.dart
+piececenter.dart 
 piecepart.dart
 piecetile.dart
