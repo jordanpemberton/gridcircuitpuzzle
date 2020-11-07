@@ -6,11 +6,14 @@ class GamePiecePainter extends CustomPainter {
     this.piece,
   );
 
-  final List piece;
+  final Map piece;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final List pieceArms = this.piece.sublist(0, 4);
+    final List pieceArms = [this.piece['top'], 
+                            this.piece['right'], 
+                            this.piece['bottom'], 
+                            this.piece['left']];
 
     final int armsCount =
         pieceArms.fold(0, (prev, curr) => prev.abs() + curr.abs());
@@ -18,8 +21,6 @@ class GamePiecePainter extends CustomPainter {
     final int horzCount = pieceArms[1].abs() + pieceArms[3].abs();
 
     final int armSum = pieceArms.fold(0, (prev, curr) => prev + curr);
-    print(armsCount);
-    print(pieceArms);
     final bool allConnected = (armsCount == armSum);
 
     final paintOuter = Paint()

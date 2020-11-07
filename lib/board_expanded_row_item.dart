@@ -10,7 +10,7 @@ class BoardExpandedRowItem extends StatelessWidget {
   );
 
   final int index;
-  final List piece;
+  final Map piece;
   final Map<String, Function> callbacks;
 
   @override
@@ -29,7 +29,7 @@ class BoardExpandedRowItem extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 color:
-                    this.piece[4] == 1 ? Colors.black : AppColors.BOARD_BG_CLR,
+                    this.piece['select'] ? Colors.black : AppColors.BOARD_BG_CLR,
                 width: 2.0,
               ),
               borderRadius: AppBorderRadii.pieceBorderRadius,
