@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gridcircuitpuzzle/app_colors.dart';
+import 'package:gridcircuitpuzzle/app_styling.dart';
 import 'package:gridcircuitpuzzle/gamepiece_painter.dart';
 
 class BoardExpandedRowItem extends StatelessWidget {
@@ -15,23 +15,29 @@ class BoardExpandedRowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print(this.piece);
+
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(1.0),
+        padding: AppPaddings.PAD_BTWN_PIECES,
         // child: RawGestureDetector(
         child: GestureDetector(
           onTap: () => this.callbacks['onTap'](this.index),
-          behavior: HitTestBehavior.translucent,
-          // behavior: HitTestBehavior.opaque,
+          // behavior: HitTestBehavior.translucent,
+          behavior: HitTestBehavior.opaque,
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(1.0),
+              border: Border.all(
+                color:
+                    this.piece[4] == 1 ? Colors.black : AppColors.BOARD_BG_CLR,
+                width: 2.0,
+              ),
+              borderRadius: AppBorderRadii.pieceBorderRadius,
               color: AppColors.PIECE_BG_CLR,
             ),
             // Need to set height at least:
             height: double.infinity,
             width: double.infinity,
-
             child: CustomPaint(
               painter: GamePiecePainter(
                 this.piece,

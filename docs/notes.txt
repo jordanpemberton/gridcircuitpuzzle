@@ -1,0 +1,17 @@
+Circuit Game: 
+
+- Mult gesture detect
+- make pieces draggable, long draggable, tappable, long tappable
+
+- Homepage
+- choices for board size
+- color options /style
+- option to change board size from game?
+
+
+Transitions
+- selected piece
+- piece being dragged
+- pieces placed
+
+- DragTarget on Draggable hover?

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'dart:math';
@@ -15,7 +14,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameState extends State<GameScreen> {
   // The size of the board:
-  static int _sideLen = 6;
+  static int _sideLen = 3;
   static int _boardLen = _sideLen * _sideLen;
 
   Map _relations;
@@ -27,11 +26,13 @@ class _GameState extends State<GameScreen> {
   int _lastSelected;
 
   void _initNewGame() {
-    _solved = false;
-    _relations = _makeRelationsMap();
-    _pieceMap = _makePieceMap();
-    _shufflePieces();
-    _makePieceList();
+    setState(() {
+      _solved = false;
+      _relations = _makeRelationsMap();
+      _pieceMap = _makePieceMap();
+      _shufflePieces();
+      _pieceList = _makePieceList();
+    });
   }
 
   void _checkIfSolved() {
@@ -64,18 +65,18 @@ class _GameState extends State<GameScreen> {
   }
 
   Map _makeRelationsMap() {
-    // Each entry for index n contains companion indexes and sides for each of n's sides,
-    // where 0 = top, 1 = right, 2 = bottom, 3 = left.
-    // For example on a 4 x 4 grid:
-    //    2: {  0: false,     // Above: none
-    //          1: [3, 3],    // To right: index 3's left arm
-    //          2: [6, 0],    // Below: index 6's top arm
-    //          3: [1, 1]   } // To left: index 1's right arm
+    /// Each entry for index n contains companion indexes and sides for each of n's sides,
+    /// where 0 = top, 1 = right, 2 = bottom, 3 = left.
+    /// For example on a 4 x 4 grid:
+    ///    2: {  0: false,     // Above: none
+    ///          1: [3, 3],    // To right: index 3's left arm
+    ///          2: [6, 0],    // Below: index 6's top arm
+    ///          3: [1, 1]   } // To left: index 1's right arm
 
     Map relations = {
       for (int i = 0; i < _boardLen; i++)
         i: {
-          // 0 = Above, 1 = Right, 2 = Below, 3 = Left
+          /// 0 = Above, 1 = Right, 2 = Below, 3 = Left
           0: i < _sideLen ? false : [i - _sideLen, 2],
           1: (i + 1) % _sideLen == 0 ? false : [i + 1, 3],
           2: i >= (_boardLen - _sideLen) ? false : [i + _sideLen, 0],
@@ -85,22 +86,26 @@ class _GameState extends State<GameScreen> {
     return relations;
   }
 
-  void _makePieceList() {
+  List _makePieceList() {
+    List pieceList = new List(_boardLen);
     _pieceMap.forEach((key, value) {
       List piece = [
         value[0],
         value[1],
         value[2],
         value[3],
+        value['select'],
       ];
-      _pieceList[key] = piece;
+      pieceList[key] = piece;
     });
+    return pieceList;
   }
 
   Map _makePieceMap() {
-    // For each index (piece) on board, fill all arms (sides) wherever a companion piece exists.
-    // Then call _removeArms(game) to remove arm pairs.
-    // Set _newGame to false, and return game.
+    /// For each index (piece) on board, fill all arms (sides)
+    /// wherever a companion piece exists.
+    /// Then call _removeArms(game) to remove arm pairs.
+    /// Set _newGame to false, and return game.
 
     final rand = Random();
 
@@ -131,10 +136,10 @@ class _GameState extends State<GameScreen> {
   }
 
   Map _removeArms(Map game) {
-    // Choose random index, and if that piece has 3+ arms,
-    // choose a random arm to remove.
-    // If a companion piece/side exists, and companion side also has 3+ arms,
-    // remove both arms and return game.
+    /// Choose random index, and if that piece has 3+ arms,
+    /// choose a random arm to remove.
+    /// If a companion piece/side exists, and companion side also has 3+ arms,
+    /// remove both arms and return game.
 
     final rand = Random();
     int rIndex = rand.nextInt(_boardLen);
@@ -160,8 +165,8 @@ class _GameState extends State<GameScreen> {
   }
 
   bool _areNoIslands(Map game) {
-    // Returns true if all pieces on board are connected (no islands)
-    // or else returns false.
+    /// Returns true if all pieces on board are connected (no islands)
+    /// or else returns false.
     List visited = _findIslands(game, 0, [], []);
 
     // print('visited: $visited');
@@ -203,7 +208,7 @@ class _GameState extends State<GameScreen> {
   }
 
   void _shufflePieces() {
-    // Shuffle index order /assign _pieceMap children new indexes.
+    /// Shuffle index order /assign _pieceMap children new indexes.
     List _indexOrder = [for (int i = 0; i < _boardLen; i++) i];
     Map _tempGame = {};
     setState(() {
@@ -220,57 +225,68 @@ class _GameState extends State<GameScreen> {
   }
 
   void _checkConnections(int index) {
-    // Given an index, check if each side is connected to it's companion.
-    // If connected, set each arm to 1, if not, set to -1 if arm exists, 0 if no arm.
+    /// Given an index, check if each side is connected to it's companion.
+    /// If connected, set each arm to 1, if not, set to -1 if arm exists, 0 if no arm.
     var companion;
     for (int j = 0; j < 4; j++) {
       companion = _relations[index][j];
-      // No partner piece:
+
+      /// No partner piece:
       if (companion == false) {
         _pieceMap[index][j] = _pieceMap[index][j] == 0 ? 0 : -1;
+        _pieceList[index][j] = _pieceList[index][j] == 0 ? 0 : -1;
       } else {
-        // Either one or both are empty -> no connection:
+        /// Either one or both are empty -> no connection:
         if (_pieceMap[index][j] * _pieceMap[companion[0]][companion[1]] == 0) {
           _pieceMap[index][j] = _pieceMap[index][j] == 0 ? 0 : -1;
+          _pieceList[index][j] = _pieceList[index][j] == 0 ? 0 : -1;
+
           _pieceMap[companion[0]][companion[1]] =
               _pieceMap[companion[0]][companion[1]] == 0 ? 0 : -1;
+          _pieceList[companion[0]][companion[1]] =
+              _pieceList[companion[0]][companion[1]] == 0 ? 0 : -1;
         }
-        // Connected!
+
+        /// Connected!
         else {
           _pieceMap[index][j] = 1;
+          _pieceList[index][j] = 1;
+
           _pieceMap[companion[0]][companion[1]] = 1;
+          _pieceList[companion[0]][companion[1]] = 1;
+        
         }
       }
     }
   }
 
   void _onTap(int index) {
-    print('$index TAPPED');
+    // print('$index TAPPED');
     setState(() {
+      // print('last selected: $_lastSelected');
       if (_lastSelected == null) {
         _pieceMap[index]['select'] = 1;
+        _pieceList[index][4] = 1;
         _lastSelected = index;
       } else if (_lastSelected == index) {
         _pieceMap[index]['select'] = 0;
+        _pieceList[index][4] = 0;
         _lastSelected = null;
       } else {
-        // _pieceMap[_lastSelected]['select'] = 0;
         Map temp = _pieceMap[_lastSelected];
+        List tempList = _pieceList[_lastSelected];
         _pieceMap[_lastSelected] = _pieceMap[index];
+        _pieceList[_lastSelected] = _pieceList[index];
         _pieceMap[index] = temp;
+        _pieceList[index] = tempList;
         _checkConnections(_lastSelected);
         _checkConnections(index);
         _lastSelected = null;
-
         _pieceMap[index]['select'] = 0;
-
-        // Future.delayed(const Duration(milliseconds: 500), () {
-        //   setState(() {
-        //     _pieceMap[index]['select'] = 0;
-        //   });
-        // });
+        _pieceList[index][4] = 0;
       }
-      // Check if solved:
+
+      /// Check if solved:
       _checkIfSolved();
     });
   }
@@ -361,7 +377,7 @@ class _GameState extends State<GameScreen> {
                   pieces: _pieceList,
                   callbacks: {
                     'onDragStart': _onDragStart,
-                    'onDragEnd': _onDragEnd, 
+                    'onDragEnd': _onDragEnd,
                     'onDragAccept': _onDragAccept,
                     'onTap': _onTap,
                   },

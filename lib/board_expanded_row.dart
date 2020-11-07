@@ -4,10 +4,12 @@ import './board_expanded_row_item.dart';
 class BoardExpandedRow extends StatelessWidget {
   BoardExpandedRow(
     this.pieces,
+    this.indexRowAdjust,
     this.callbacks,
   );
 
   final List pieces;
+  final int indexRowAdjust;
   final Map<String, Function> callbacks;
 
   @override
@@ -18,7 +20,7 @@ class BoardExpandedRow extends StatelessWidget {
         children: [
           for (int i = 0; i < pieces.length; i++)
             BoardExpandedRowItem(
-              i,
+              indexRowAdjust + i,
               this.pieces[i],
               this.callbacks,
             ),
