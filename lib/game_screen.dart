@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'dart:collection';
 import './game_board.dart';
 import './win_alert.dart';
 
@@ -175,21 +174,15 @@ class _GameState extends State<GameScreen> {
     /// Use BFS to search connections on board.
     /// If all pieces on board are connected (no islands)
     /// returns true, else returns false.
-    // Set<int> visited;
     int n = _boardSize * _boardSize;
     List<int> visited = List();
     List<int> q = List.from([0]);
-    // Queue<int> queue = Queue.from([0]);
     int curr;
 
     while (0 < q.length && q.length < n) {
-      // while (queue.isNotEmpty) {
-      /// Pop index off queue:
-      // curr = queue.removeFirst();
       curr = q[0];
       q.removeAt(0);
       visited.add(curr);
-
       /// Check all sides:
       for (int j = 0; j < 4; j++) {
         /// If arm exists:
@@ -200,7 +193,6 @@ class _GameState extends State<GameScreen> {
             if (visited.contains(adj[0]) == false &&
                 q.contains(adj[0]) == false) {
               /// Add the adj piece to the queue to check:
-              // queue.addLast(_relations[curr][armKeys[j]][0]);
               q.add(_relations[curr][armKeys[j]][0]);
             }
           }
@@ -230,7 +222,6 @@ class _GameState extends State<GameScreen> {
     /// Given an index, check if each arm is now connected to an adj arm.
     /// If connected, set both armKeys to 1.
     /// If not connected, if armKeys exist, set to -1.
-
     setState(() {
       for (int j = 0; j < 4; j++) {
         String arm = armKeys[j];
