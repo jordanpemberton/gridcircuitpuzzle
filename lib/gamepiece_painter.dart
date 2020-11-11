@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gridcircuitpuzzle/app_styling.dart';
+import './app_styling.dart';
 
 class GamePiecePainter extends CustomPainter {
   GamePiecePainter(
@@ -16,11 +16,11 @@ class GamePiecePainter extends CustomPainter {
                             this.piece['left']];
 
     final int armsCount =
-        pieceArms.fold(0, (prev, curr) => prev.abs() + curr.abs());
+        pieceArms.fold(0, (prev, curr) => (prev.abs() + curr.abs()).toInt());
     final int vertCount = pieceArms[0].abs() + pieceArms[2].abs();
     final int horzCount = pieceArms[1].abs() + pieceArms[3].abs();
 
-    final int armSum = pieceArms.fold(0, (prev, curr) => prev + curr);
+    final int armSum = pieceArms.fold(0, (prev, curr) => (prev + curr).toInt());
     final bool allConnected = (armsCount == armSum);
 
     final paintOuter = Paint()

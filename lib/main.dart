@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gridcircuitpuzzle/app_styling.dart';
-// import 'package:flutter/gestures.dart';
 
-import 'home.dart';
-import 'game_screen.dart';
+import './app_styling.dart';
+import './home.dart';
+import './game_screen.dart';
 
 void main() {
   // debugPrintGestureArenaDiagnostics = true;

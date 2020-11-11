@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import './board_expanded_row_item.dart';
 
 class BoardExpandedRow extends StatelessWidget {
-  BoardExpandedRow(
-    this.pieces,
-    this.indexRowAdjust,
-    this.callbacks,
-  );
+  BoardExpandedRow({
+    @required this.pieces,
+    @required this.indexRowAdjust,
+    @required this.onTap,
+  });
 
   final List pieces;
   final int indexRowAdjust;
-  final Map<String, Function> callbacks;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
+    // print(this.pieces);
     return Expanded(
       child: Row(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           for (int i = 0; i < pieces.length; i++)
             BoardExpandedRowItem(
-              indexRowAdjust + i,
-              this.pieces[i],
-              this.callbacks,
+              index: this.indexRowAdjust + i,
+              piece: this.pieces[i],
+              onTap: this.onTap,
             ),
         ],
       ),

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gridcircuitpuzzle/app_styling.dart';
-import 'package:gridcircuitpuzzle/gamepiece_painter.dart';
+import './app_styling.dart';
+import './gamepiece_painter.dart';
 
 class BoardExpandedRowItem extends StatelessWidget {
-  BoardExpandedRowItem(
-    this.index,
-    this.piece,
-    this.callbacks,
-  );
+  BoardExpandedRowItem({
+    @required this.index,
+    @required this.piece,
+    @required this.onTap,
+  });
 
   final int index;
   final Map piece;
-  final Map<String, Function> callbacks;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +22,14 @@ class BoardExpandedRowItem extends StatelessWidget {
         padding: AppPaddings.PAD_BTWN_PIECES,
         // child: RawGestureDetector(
         child: GestureDetector(
-          onTap: () => this.callbacks['onTap'](this.index),
+          onTap: () => this.onTap(this.index),
           // behavior: HitTestBehavior.translucent,
           behavior: HitTestBehavior.opaque,
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(
                 color:
-                    this.piece['select'] ? Colors.black : AppColors.BOARD_BG_CLR,
+                    this.piece['select'] == true ? Colors.black : AppColors.BOARD_BG_CLR,
                 width: 2.0,
               ),
               borderRadius: AppBorderRadii.pieceBorderRadius,

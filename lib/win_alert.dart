@@ -6,13 +6,13 @@ class WinAlert extends StatelessWidget {
   final String _content = 'Congrats :)';
   final String _home = 'Home';
   final String _new = 'New Game';
-  
+
   final Function onHome;
   final Function onNewGame;
 
   WinAlert({
-    this.onHome,
-    this.onNewGame,
+    @required this.onHome,
+    @required this.onNewGame,
   });
 
 
@@ -28,14 +28,16 @@ class WinAlert extends StatelessWidget {
         new FlatButton(
           child: new Text(_home),
           onPressed: () {
-            Navigator.of(context).pop();
+            // Navigator.of(context).pop();
+            Navigator.pop(context);
             onHome();
           },
         ),
         new FlatButton(
           child: Text(_new),
-          onPressed: () {    
-            Navigator.of(context).pop();
+          onPressed: () {
+            // Navigator.of(context).pop();
+            Navigator.pop(context);
             onNewGame();
           },
         ),

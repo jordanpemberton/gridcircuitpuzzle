@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gridcircuitpuzzle/app_styling.dart';
-import 'package:gridcircuitpuzzle/board_expanded_row.dart';
+import './app_styling.dart';
+import './board_expanded_row.dart';
 
 class GameBoard extends StatelessWidget {
   GameBoard({
-    this.pieces,
-    this.size,
-    this.callbacks,
+    @required this.pieces,
+    @required this.size,
+    @required this.onTap,
   });
 
   final List pieces;
   final int size;
-  final Map<String, Function> callbacks;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +28,9 @@ class GameBoard extends StatelessWidget {
           children: [
             for (int i = 0; i < this.size; i++)
               BoardExpandedRow(
-                this
-                    .pieces
-                    .sublist((i * this.size), (i * this.size + this.size)),
-                this.size * i,
-                this.callbacks,
+                pieces: this.pieces.sublist((i * this.size), (i * this.size + this.size)),
+                indexRowAdjust: this.size * i,
+                onTap: this.onTap,
               ),
           ],
         ),
