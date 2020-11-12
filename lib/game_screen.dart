@@ -20,8 +20,15 @@ class _GameState extends State<GameScreen> {
   bool _newGame = true;
   bool _solved = true;
 
-  /// Track if game solved with toal connections:
-  int _totalArmCount = 4 * (_boardSize * _boardSize) - (4 * _boardSize) - 4;
+  /// Track if game solved with total arm connections.
+  /// All arms completely filled, before removing any:
+  static int _startingArmCount =
+      4 * (_boardSize * _boardSize) - (4 * _boardSize);
+
+  /// Actual game total arms:
+  int _totalArmCount = _startingArmCount;
+
+  /// Connected arms:
   int _connectedArmsCount = 0;
 
   /// need == total arms to win
@@ -67,6 +74,7 @@ class _GameState extends State<GameScreen> {
 
   bool _checkIfSolved() {
     int n = _boardSize * _boardSize;
+
     /// Check for any unpaired arms:
     for (int i = 0; i < n; i++) {
       if (_pieces[i].containsValue(-1) == true) {
@@ -112,17 +120,26 @@ class _GameState extends State<GameScreen> {
       game[i] = newPiece;
     }
 
-    game = _removeArms(game);
+    List<dynamic> remResults = _removeArms(game);
+    game = remResults[0];
+    int remCount = remResults[1];
 
     /// Check for islands:
     if (_areThereIslands(game) == true) {
       /// Try again (recursive self call):
       return _makePieceList();
     }
+
+    /// Set total arm count:
+    // print('Total arm count: $_totalArmCount');
+    print('- $remCount');
+    _totalArmCount -= remCount;
+    // print('Total arm count: $_totalArmCount');
     return game;
   }
 
-  List<Map<String, dynamic>> _removeArms(List<Map<String, dynamic>> game) {
+  // <List<Map<String, dynamic>>
+  List<dynamic> _removeArms(List<Map<String, dynamic>> game) {
     /// Choose random index, and if that piece has 3+ arms,
     /// choose a random arm to remove.
     /// If an adjacent piece exists, and the adjacent
@@ -133,7 +150,8 @@ class _GameState extends State<GameScreen> {
     int removedCount = 0;
     int count = 0;
 
-    while (count < n) {
+    while (count < n || removedCount < _boardSize - 1) {
+      // *guarantee that some are actually removed (for smaller boards)
       /// Pick a random index on board:
       int i = rand.nextInt(n);
 
@@ -167,7 +185,7 @@ class _GameState extends State<GameScreen> {
       }
       count += 1;
     }
-    return game;
+    return [game, removedCount];
   }
 
   bool _areThereIslands(List<Map<String, dynamic>> game) {
@@ -183,6 +201,7 @@ class _GameState extends State<GameScreen> {
       curr = q[0];
       q.removeAt(0);
       visited.add(curr);
+
       /// Check all sides:
       for (int j = 0; j < 4; j++) {
         /// If arm exists:
@@ -296,6 +315,7 @@ class _GameState extends State<GameScreen> {
     setState(() {
       _solved = false;
       _newGame = true;
+      _totalArmCount = _startingArmCount;
     });
   }
 
@@ -303,6 +323,7 @@ class _GameState extends State<GameScreen> {
     setState(() {
       _solved = false;
       _newGame = true;
+      _totalArmCount = _startingArmCount;
     });
   }
 
@@ -331,7 +352,6 @@ class _GameState extends State<GameScreen> {
                   pieces: _pieces,
                   onTap: _onTap,
                 ),
-                // child: Container(),
               ),
               RaisedButton(
                 onPressed: _resetNewGame,
