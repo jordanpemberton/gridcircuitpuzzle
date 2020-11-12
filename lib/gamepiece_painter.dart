@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import './app_styling.dart';
+import 'package:gridcircuitpuzzle/app_styling.dart';
 
 class GamePiecePainter extends CustomPainter {
   GamePiecePainter(
     this.piece,
   );
 
-  final Map piece;
+  final Map<String, dynamic> piece;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final List pieceArms = [this.piece['top'], 
-                            this.piece['right'], 
-                            this.piece['bottom'], 
-                            this.piece['left']];
+    final List pieceArms = [
+      this.piece['top'],
+      this.piece['right'],
+      this.piece['bottom'],
+      this.piece['left']
+    ];
 
     final int armsCount =
         pieceArms.fold(0, (prev, curr) => (prev.abs() + curr.abs()).toInt());
@@ -68,11 +70,10 @@ class GamePiecePainter extends CustomPainter {
     /// If 4 arms:
     if (armsCount == 4) {
       /// Vertical:
-      makeLineBetween(
-          topCenter, bottomCenter);
+      makeLineBetween(topCenter, bottomCenter);
+
       /// Horizontal:
-      makeLineBetween(
-          leftCenter, rightCenter);
+      makeLineBetween(leftCenter, rightCenter);
     }
 
     /// If 3 arms:
@@ -101,13 +102,12 @@ class GamePiecePainter extends CustomPainter {
       /// If 2 piece are opposite each other, draw straight line between:
       /// Vertical:
       if (vertCount == 2) {
-        makeLineBetween(
-            topCenter, bottomCenter);
+        makeLineBetween(topCenter, bottomCenter);
       }
+
       /// Horizontal:
       else if (horzCount == 2) {
-        makeLineBetween(
-            leftCenter, rightCenter);
+        makeLineBetween(leftCenter, rightCenter);
       }
 
       /// If 2 piece are adjacent, make an arc between:

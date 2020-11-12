@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './app_styling.dart';
-import './gamepiece_painter.dart';
+import 'package:gridcircuitpuzzle/app_styling.dart';
+import 'package:gridcircuitpuzzle/gamepiece_painter.dart';
 
 class BoardExpandedRowItem extends StatelessWidget {
   BoardExpandedRowItem({
@@ -10,13 +10,11 @@ class BoardExpandedRowItem extends StatelessWidget {
   });
 
   final int index;
-  final Map piece;
+  final Map<String, dynamic> piece;
   final Function onTap;
 
   @override
   Widget build(BuildContext context) {
-    // print(this.piece);
-
     return Expanded(
       child: Padding(
         padding: AppPaddings.PAD_BTWN_PIECES,
@@ -28,8 +26,9 @@ class BoardExpandedRowItem extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color:
-                    this.piece['select'] == true ? Colors.black : AppColors.BOARD_BG_CLR,
+                color: this.piece['select'] == true
+                    ? AppColors.PIECE_SEL_BORDER_CLR
+                    : AppColors.BOARD_BG_CLR,
                 width: 2.0,
               ),
               borderRadius: AppBorderRadii.pieceBorderRadius,

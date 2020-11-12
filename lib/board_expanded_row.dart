@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './board_expanded_row_item.dart';
+import 'package:gridcircuitpuzzle/board_expanded_row_item.dart';
 
 class BoardExpandedRow extends StatelessWidget {
   BoardExpandedRow({
@@ -14,7 +14,6 @@ class BoardExpandedRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(this.pieces);
     return Expanded(
       child: Row(
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,

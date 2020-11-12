@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
-import './app_styling.dart';
-import './home.dart';
-import './game_screen.dart';
+import 'package:gridcircuitpuzzle/app_styling.dart';
+import 'package:gridcircuitpuzzle/app_content.dart';
+import 'package:gridcircuitpuzzle/home.dart';
+import 'package:gridcircuitpuzzle/game.dart';
+import 'package:gridcircuitpuzzle/settings.dart';
 
 void main() {
   // debugPrintGestureArenaDiagnostics = true;
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Connect Puzzle',
+        title: AppText.APP_TITLE,
         theme: ThemeData(
             primarySwatch: AppColors.THEME_PRIMARY_SWATCH,
             visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -27,8 +28,9 @@ class MyApp extends StatelessWidget {
             )),
         initialRoute: '/',
         routes: {
-          '/': (context) => HomeScreen(title: 'Circuit Connect HOME'),
-          '/game': (context) => GameScreen(title: 'Circuit Connect PLAY'),
+          '/': (context) => HomeScreen(title: AppText.HOME_TITLE),
+          '/game': (context) => GameScreen(title: AppText.GAME_TITLE),
+          '/settings': (context) => SettingsScreen(title: AppText.SETT_TITLE),
         });
   }
 }

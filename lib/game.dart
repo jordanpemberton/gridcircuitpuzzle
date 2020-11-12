@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import './game_board.dart';
-import './win_alert.dart';
+import 'package:gridcircuitpuzzle/app_content.dart';
+import 'package:gridcircuitpuzzle/settings.dart';
+import 'package:gridcircuitpuzzle/game_board.dart';
+import 'package:gridcircuitpuzzle/win_alert.dart';
 
 class GameScreen extends StatefulWidget {
   GameScreen({Key key, this.title}) : super(key: key);
@@ -11,7 +13,7 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameState extends State<GameScreen> {
-  static int _boardSize = 3;
+  static int _boardSize = 3; // Make this edit-able
   static List<String> armKeys = ['top', 'right', 'bottom', 'left'];
   static Map<int, Map<String, dynamic>> _relations = _makeRelationsMap();
 
@@ -355,13 +357,23 @@ class _GameState extends State<GameScreen> {
               ),
               RaisedButton(
                 onPressed: _resetNewGame,
-                child: Text('New Game'),
+                child: Text(AppText.GAME_NEW_BTN_TXT),
               ),
+              // RaisedButton(
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //   },
+              //   child: Text(AppText.GAME_HOME_BTN_TXT),
+              // ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SettingsScreen(title: AppText.SETT_TITLE)));
                 },
-                child: Text('Go back!'),
+                child: Text(AppText.GAME_SETT_BTN_TXT),
               ),
             ],
           ),

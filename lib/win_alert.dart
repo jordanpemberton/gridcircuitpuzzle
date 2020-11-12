@@ -1,14 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:gridcircuitpuzzle/app_styling.dart';
+import 'package:gridcircuitpuzzle/app_content.dart';
 
 class WinAlert extends StatelessWidget {
-  final Color _color = Colors.grey[300];
-  final String _title = 'You Win!';
-  final String _content = 'Congrats :)';
-  final String _home = 'Home';
-  final String _new = 'New Game';
-
   final Function onHome;
   final Function onNewGame;
 
@@ -20,21 +14,21 @@ class WinAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text(
-        _title,
+      title: Text(
+        AppText.DIALOG_TITLE,
         textAlign: TextAlign.center,
       ),
-      content: new Text(
-        _content,
+      content: Text(
+        AppText.DIALOG_BODY_TXT,
         textAlign: TextAlign.center,
       ),
-      backgroundColor: _color,
-      shape:
-          RoundedRectangleBorder(borderRadius: new BorderRadius.circular(15)),
+      backgroundColor: AppColors.DIALOG_BG_CLR,
+      shape: RoundedRectangleBorder(
+          borderRadius: AppBorderRadii.dialogBorderRadius),
       actions: <Widget>[
-        /// Go to home page:  // not working correctly yet
-        new FlatButton(
-          child: new Text(_home),
+        /// Go to home page:
+        FlatButton(
+          child: Text(AppText.DIALOG_HM_BTN_TXT),
           onPressed: () {
             onHome();
             Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -42,12 +36,12 @@ class WinAlert extends StatelessWidget {
         ),
 
         /// Start new game:
-        new FlatButton(
-          child: Text(_new),
+        FlatButton(
+          child: Text(AppText.DIALOG_NWGM_BTN_TXT),
           onPressed: () {
             onNewGame();
             Navigator.pop(context);
-            Navigator.popAndPushNamed(context,'/game');
+            Navigator.popAndPushNamed(context, '/game');
           },
         ),
       ],
