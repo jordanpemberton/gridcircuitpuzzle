@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gridcircuitpuzzle/app_styling.dart';
+import 'package:gridcircuitpuzzle/app_content.dart';
 
 class GamePiecePainter extends CustomPainter {
   GamePiecePainter(
