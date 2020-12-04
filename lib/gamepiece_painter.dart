@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gridcircuitpuzzle/app_styling.dart';
 import 'package:gridcircuitpuzzle/app_content.dart';
 
+import 'app_styling.dart';
+
 class GamePiecePainter extends CustomPainter {
   GamePiecePainter(
     this.piece,
@@ -11,6 +13,7 @@ class GamePiecePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+
     final List pieceArms = [
       this.piece['top'],
       this.piece['right'],
@@ -25,19 +28,6 @@ class GamePiecePainter extends CustomPainter {
 
     final int armSum = pieceArms.fold(0, (prev, curr) => (prev + curr).toInt());
     final bool allConnected = (armsCount == armSum);
-
-    final paintOuter = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 12.0
-      ..color =
-          allConnected ? AppColors.STROKE_CONN_CLR : AppColors.STROKE_OUT_CLR;
-
-    final paintInner = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0
-      ..color = AppColors.STROKE_IN_CLR;
-
-    final path = Path();
 
     final double r = size.width / 2;
 
@@ -54,12 +44,30 @@ class GamePiecePainter extends CustomPainter {
     final Offset leftCenter = Offset(xLeft, yCenter);
     final Offset rightCenter = Offset(xRight, yCenter);
 
+    final path = Path();
+
+    /// Paint() for outer line
+    final paintOuter = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * AppStrokeSizes.STROKE_WIDTH_OUT
+      ..color =
+          allConnected ? AppColors.STROKE_CONN_CLR : AppColors.STROKE_OUT_CLR;
+
+    /// Paint() for inner line
+    final paintInner = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * AppStrokeSizes.STROKE_WIDTH_IN
+      ..color = AppColors.STROKE_IN_CLR;
+
     void makeLineBetween(Offset a, Offset b) {
+      /// Draw a straight line between points a and b.
       canvas.drawLine(a, b, paintOuter);
       canvas.drawLine(a, b, paintInner);
     }
 
     void makeArcTo(double x2, double y2) {
+      /// Draw an arc from current position
+      /// to given coordinates.
       path.arcToPoint(
         Offset(x2, y2),
         radius: Radius.circular(r),
@@ -101,12 +109,11 @@ class GamePiecePainter extends CustomPainter {
     /// If 2 arms:
     else if (armsCount == 2) {
       /// If 2 piece are opposite each other, draw straight line between:
-      /// Vertical:
+      /// Vertical
       if (vertCount == 2) {
         makeLineBetween(topCenter, bottomCenter);
       }
-
-      /// Horizontal:
+      /// Horizontal
       else if (horzCount == 2) {
         makeLineBetween(leftCenter, rightCenter);
       }

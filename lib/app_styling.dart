@@ -12,15 +12,24 @@ class AppColors {
   static const Color DIALOG_BG_CLR = Color(0xFFDDDDDD);
 }
 
-// class AppStrokeSizes {
-// make relative
-// }
+class AppStrokeSizes {
+  /// Stroke width factors
+  /// (Relative to container size.width)
+  static const double STROKE_WIDTH_OUT = 0.12;
+  static const double STROKE_WIDTH_IN = 0.06;
+}
 
 class AppPaddings {
   static const EdgeInsets PAD_HOME_PG = EdgeInsets.all(24.0);
-  // Make relative...
-  static const EdgeInsets PAD_BOARD_BORDER = EdgeInsets.all(4.0);
-  static const EdgeInsets PAD_BTWN_PIECES = EdgeInsets.all(2.0);
+  // static const EdgeInsets PAD_BOARD_BORDER = EdgeInsets.all(4.0);
+  // static const EdgeInsets PAD_BTWN_PIECES = EdgeInsets.all(2.0);
+}
+
+class AppSizeFactors {
+  /// Using FractionallySizedBox (instead of padding)
+  static const double BOARD_SIZE_FACT = 0.95;
+  static const double INNER_BOARD_SIZE_FACT = 0.95;
+  static const double PIECE_SIZE_FACT = 0.95;
 }
 
 class AppBorderRadii {

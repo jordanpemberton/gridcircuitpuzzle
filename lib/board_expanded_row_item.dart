@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gridcircuitpuzzle/app_styling.dart';
 import 'package:gridcircuitpuzzle/gamepiece.dart';
 
+import 'app_styling.dart';
+import 'app_styling.dart';
+import 'gamepiece.dart';
+
 class BoardExpandedRowItem extends StatelessWidget {
   BoardExpandedRowItem({
     @required this.index,
@@ -16,8 +20,10 @@ class BoardExpandedRowItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Padding(
-        padding: AppPaddings.PAD_BTWN_PIECES,
+      child: FractionallySizedBox(
+        widthFactor: AppSizeFactors.PIECE_SIZE_FACT,
+        heightFactor: AppSizeFactors.PIECE_SIZE_FACT,
+        alignment: Alignment.center,
         child: GamePiece(
           index: this.index,
           piece: this.piece,

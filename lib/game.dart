@@ -13,7 +13,7 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameState extends State<GameScreen> {
-  static int _boardSize = 3; // Make this edit-able
+  static int _boardSize = 4;      // <-- Make this edit-able
   static List<String> armKeys = ['top', 'right', 'bottom', 'left'];
   static Map<int, Map<String, dynamic>> _relations = _makeRelationsMap();
 
@@ -134,7 +134,7 @@ class _GameState extends State<GameScreen> {
 
     /// Set total arm count:
     // print('Total arm count: $_totalArmCount');
-    print('- $remCount');
+    // print('- $remCount');
     _totalArmCount -= remCount;
     // print('Total arm count: $_totalArmCount');
     return game;
