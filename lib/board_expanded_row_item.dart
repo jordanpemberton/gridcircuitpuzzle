@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gridcircuitpuzzle/app_styling.dart';
 import 'package:gridcircuitpuzzle/gamepiece.dart';
 
-import 'app_styling.dart';
-import 'app_styling.dart';
-import 'gamepiece.dart';
-
 class BoardExpandedRowItem extends StatelessWidget {
   BoardExpandedRowItem({
     @required this.index,

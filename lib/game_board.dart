@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gridcircuitpuzzle/app_styling.dart';
 import 'package:gridcircuitpuzzle/board_expanded_row.dart';
 
-import 'app_styling.dart';
-import 'app_styling.dart';
-import 'app_styling.dart';
 
 class GameBoard extends StatelessWidget {
   GameBoard({

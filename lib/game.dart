@@ -6,19 +6,36 @@ import 'package:gridcircuitpuzzle/game_board.dart';
 import 'package:gridcircuitpuzzle/win_alert.dart';
 
 class GameScreen extends StatefulWidget {
-  GameScreen({Key key, this.title}) : super(key: key);
+  GameScreen({
+    Key key,
+    this.title,
+  }) : super(key: key);
+
   final String title;
+
   @override
   _GameState createState() => _GameState();
 }
 
 class _GameState extends State<GameScreen> {
-  static int _boardSize = 4;      // <-- Make this edit-able
-  static List<String> armKeys = ['top', 'right', 'bottom', 'left'];
+  final int boardSize; // ?
+  // final int boardLen;
+
+  _GameState({
+    /// Default size
+    this.boardSize = 4,
+    // this.boardLen = 16,
+  });
+
+  static int _boardSize = 4; // <-- Make this change-able
+
+  static const List<String> armKeys = ['top', 'right', 'bottom', 'left'];
+
   static Map<int, Map<String, dynamic>> _relations = _makeRelationsMap();
 
   List<Map<String, dynamic>> _pieces =
       List<Map<String, dynamic>>(_boardSize * _boardSize);
+
   bool _newGame = true;
   bool _solved = true;
 
