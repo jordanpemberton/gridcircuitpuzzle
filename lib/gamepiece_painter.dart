@@ -49,13 +49,13 @@ class GamePiecePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * AppStrokeSizes.STROKE_WIDTH_OUT
       ..color =
-          allConnected ? AppColors.STROKE_CONN_CLR : AppColors.STROKE_OUT_CLR;
+          allConnected ? AppColors.strokeOuterHiLtColor : AppColors.strokeOuterColor;
 
     /// Paint() for inner line
     final paintInner = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * AppStrokeSizes.STROKE_WIDTH_IN
-      ..color = AppColors.STROKE_IN_CLR;
+      ..color = AppColors.strokeInnerColor;
 
     void makeLineBetween(Offset a, Offset b) {
       /// Draw a straight line between points a and b.
@@ -98,7 +98,7 @@ class GamePiecePainter extends CustomPainter {
     else if (armsCount == 3) {
       if (pieceArms[0] == 0) {
         if (AppCustomStyles.painterLineType == 'arc') {
-          
+
         }
         /// Connect Left->Bottom->Right
         path.moveTo(xLeft, yCenter);

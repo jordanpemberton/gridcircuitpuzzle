@@ -22,7 +22,7 @@ class WinAlert extends StatelessWidget {
         AppText.DIALOG_BODY_TXT,
         textAlign: TextAlign.center,
       ),
-      backgroundColor: AppColors.DIALOG_BG_CLR,
+      backgroundColor: AppColors.diaglogBGColor,
       shape: RoundedRectangleBorder(
           borderRadius: AppBorderRadii.dialogBorderRadius),
       actions: <Widget>[

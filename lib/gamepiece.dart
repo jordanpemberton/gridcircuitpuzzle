@@ -22,17 +22,14 @@ class GamePiece extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: this.piece['select'] == true
-                ? AppColors.PIECE_SEL_BORDER_CLR
-                : AppColors.BOARD_BG_CLR,
-            width: 2.0,
+            color: this.piece['select']
+                ? AppColors.pieceBorderHiLtColor
+                : AppColors.pieceBorderRestingColor,
+            width: AppBoxDecoration.PIECE_BORDER_W,
           ),
           borderRadius: AppBorderRadii.pieceBorderRadius,
-          color: AppColors.PIECE_BG_CLR,
+          color: AppColors.pieceBGColor,
         ),
-        // Need to set height at least:
-        height: double.infinity,
-        width: double.infinity,
         child: CustomPaint(
           painter: GamePiecePainter(
             this.piece,

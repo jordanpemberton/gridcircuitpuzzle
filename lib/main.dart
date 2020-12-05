@@ -17,13 +17,13 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: AppText.APP_TITLE,
         theme: ThemeData(
-            primarySwatch: AppColors.THEME_PRIMARY_SWATCH,
+            primarySwatch: AppColors.themePrimarySwatch,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             buttonBarTheme: ButtonBarThemeData(
               alignment: MainAxisAlignment.spaceAround,
             ),
             buttonTheme: ButtonThemeData(
-              buttonColor: AppColors.BUTTON_THEME_CLR,
+              buttonColor: AppColors.buttonThemeColor,
               textTheme: ButtonTextTheme.primary,
             )),
         initialRoute: '/',

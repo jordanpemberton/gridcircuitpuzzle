@@ -25,7 +25,7 @@ class GameBoard extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: AppColors.BOARD_BG_CLR,
+            color: AppColors.boardBGColor,
             borderRadius: AppBorderRadii.boardBorderRadius,
           ),
           child: FractionallySizedBox(

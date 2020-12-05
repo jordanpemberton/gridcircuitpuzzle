@@ -27,7 +27,7 @@ class _GameState extends State<GameScreen> {
     // this.boardLen = 16,
   });
 
-  static int _boardSize = 4; // <-- Make this change-able
+  static int _boardSize = 4; // 4 <-- Make this change-able
 
   static const List<String> armKeys = ['top', 'right', 'bottom', 'left'];
 
@@ -83,11 +83,11 @@ class _GameState extends State<GameScreen> {
       _pieces = _makePieceList();
       _newGame = false;
       _solved = true;
-      while (_solved) {
-        _pieces = _shufflePieces(_pieces);
-        _checkAllConnections();
-        _solved = _checkIfSolved();
-      }
+      // while (_solved) {
+        // _pieces = _shufflePieces(_pieces);
+        // _checkAllConnections();
+        // _solved = _checkIfSolved();
+      // }
     });
   }
 
