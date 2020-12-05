@@ -1,17 +1,25 @@
-# Grid Circuit Puzzle
-#### Prototype
-### A Flutter puzzle app.  Complete the circuits to win!
+# Circuit Connect
 
-<br/>
+### A Flutter puzzle app.  Connect the circuits to win!
 
-![Screengrab Prototype 4x4](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/four_1.png)
+---
 
-<br/>
+### Prototype
 
-![Screengrab Prototype 8x8](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/eight_2.png)
+![Screengrab Prototype Demo](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/curvypainted/curvydemo.png)
 
-<br/>
+![Screengrab Prototype Sizes](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/curvypainted/curvysizes.png)
 
-![Screengrab Prototype 12x12](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/twelve_1.png)
+---
 
-<br/>
+### Earlier Versions
+
+![Screengrab Early Prototype 4x4](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/simpledivs/four_1.png)
+
+
+![Screengrab Early Prototype 8x8](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/simpledivs/eight_2.png)
+
+
+![Screengrab Early Prototype 12x12](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/simpledivs/twelve_1.png)
+
+
