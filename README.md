@@ -1,10 +1,10 @@
 # Circuit Connect
 
-### A Flutter puzzle app.  Connect the circuits to win!
+#### A Flutter puzzle app.  Connect the circuits to win!
 
 ---
 
-### Prototype
+## Prototype
 
 ![Screengrab Prototype Demo](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/curvypainted/curvydemo.png)
 
@@ -12,7 +12,7 @@
 
 ---
 
-### Earlier Versions
+## Earlier Versions
 
 ![Screengrab Early Prototype 4x4](https://github.com/jordanpemberton/gridcircuitpuzzle/blob/master/docs/screenshots/simpledivs/four_1.png)
 
