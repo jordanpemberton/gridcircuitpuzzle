@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'dart:collection';
-import 'game_board.dart';
-import 'win_alert.dart';
+import 'package:gridcircuitpuzzle/app_content.dart';
+import 'package:gridcircuitpuzzle/settings.dart';
+import 'package:gridcircuitpuzzle/game_board.dart';
+import 'package:gridcircuitpuzzle/win_alert.dart';
 
 class GameScreen extends StatefulWidget {
-  GameScreen({Key key, this.title}) : super(key: key);
+  GameScreen({
+    Key key,
+    this.title,
+  }) : super(key: key);
+
   final String title;
+
   @override
   _GameState createState() => _GameState();
 }
@@ -14,7 +20,7 @@ class GameScreen extends StatefulWidget {
 class _GameState extends State<GameScreen> {
   static int _boardSize = 5;   // side length
   static List armKeys = ['top', 'right', 'bottom', 'left'];
-  
+
   Map _relations;
   List _pieces = new List(_boardSize * _boardSize);
   bool _newGame = true;
@@ -32,9 +38,10 @@ class _GameState extends State<GameScreen> {
     ///   bottom: [adj index, adj arm] : false,
     ///   left: [adj index, adj arm] : false,
     /// }
-    /// This map doesn't change as pieces move.
+    /// This map doesn't change as pieces move,
+    /// is only initialized once.
     int n = _boardSize * _boardSize;
-    Map relations = {
+    Map<int, Map<String, dynamic>> relations = {
       for (int i = 0; i < n; i++)
         i: {
           'top': i < _boardSize ? false : [i - _boardSize, 'bottom'],
@@ -53,9 +60,9 @@ class _GameState extends State<GameScreen> {
 
       // _solved = true;
       // while (_solved) {
-      //   _pieces = _shufflePieces(_pieces);
-      //   _checkAllConnections();
-      //   _solved = _checkIfSolved();
+        // _pieces = _shufflePieces(_pieces);
+        // _checkAllConnections();
+        // _solved = _checkIfSolved();
       // }
     });
   }
@@ -65,7 +72,7 @@ class _GameState extends State<GameScreen> {
 
     /// Check for any unpaired arms:
     for (int i = 0; i < n; i++) {
-      if (_pieces[i].containsValue(-1)) {
+      if (_pieces[i].containsValue(-1) == true) {
         return false;
       }
     }
@@ -73,13 +80,6 @@ class _GameState extends State<GameScreen> {
   }
 
   void _gameSolved() {
-    // int n = _boardSize * _boardSize;
-    /// Check for any unpaired arms:
-    // for (int i = 0; i < n; i++) {
-    //   if (_pieces[i].containsValue(-1)) {
-    //     return false;
-    //   }
-    // }
     /// Solved! Change state
     setState(() {
       print('YOU WIN!');
@@ -94,19 +94,18 @@ class _GameState extends State<GameScreen> {
         },
       );
     });
-    // return true;
   }
 
-  List _makePieceList() {
+  List<Map<String, dynamic>> _makePieceList() {
     /// For each index on board, first fill all armKeys
     /// wherever a adjacent index exists.
     /// Then call _removeArms(game) to remove arm pairs.
     /// Set _newGame to false, and return game.
     int n = _boardSize * _boardSize;
-    List game = new List(n);
+    List<Map<String, dynamic>> game = List<Map<String, dynamic>>(n);
 
     for (int i = 0; i < n; i++) {
-      Map newPiece = {
+      Map<String, dynamic> newPiece = {
         'top': _relations[i]['top'] == false ? 0 : 1,
         'right': _relations[i]['right'] == false ? 0 : 1,
         'bottom': _relations[i]['bottom'] == false ? 0 : 1,
@@ -121,30 +120,30 @@ class _GameState extends State<GameScreen> {
     int remArmCount = remArmsRes[1];
 
     /// Check for islands:
-    if (_areThereIslands(game)) {
-      /// Try again:
+    if (_areThereIslands(game) == true) {
+      /// Try again (recursive self call):
       return _makePieceList();
     }
-    // Adjust arm count: 
+    // Adjust arm count:
     _totalArmCount -= remArmCount;
     _newGame = false;
     return game;
   }
 
-  List _removeArms(List game) {
-    /// Choose random index, and if that piece has 3+ armKeys,
+  // <List<Map<String, dynamic>>
+  List<dynamic> _removeArms(List<Map<String, dynamic>> game) {
+    /// Choose random index, and if that piece has 3+ arms,
     /// choose a random arm to remove.
     /// If an adjacent piece exists, and the adjacent
-    /// piece also has 3+ armKeys, remove both armKeys in the pair
+    /// piece also has 3+ arms, remove both arms in the pair
     /// Return game.
-
-    int x = _boardSize;
-    int n = x * x;
-    int m = (x - 2) * (x - 2);
+    int n = _boardSize * _boardSize;
+    Random rand = Random();
     int removedCount = 0;
-    final Random rand = Random();
+    int count = 0;
 
-    while (removedCount < (n + m)) {
+    while (count < n || removedCount < _boardSize - 1) {
+      // *guarantee that some are actually removed (for smaller boards)
       /// Pick a random index on board:
       int i = rand.nextInt(n);
 
@@ -176,36 +175,48 @@ class _GameState extends State<GameScreen> {
           }
         }
       }
+      count += 1;
     }
     return [game, removedCount];
   }
 
-  bool _areThereIslands(List game) {
+  bool _areThereIslands(List<Map<String, dynamic>> game) {
     /// Use BFS to search connections on board.
     /// If all pieces on board are connected (no islands)
     /// returns true, else returns false.
-    Set visited;
-    Queue queue;
-    queue.addLast(0);
+    int n = _boardSize * _boardSize;
+    List<int> visited = List();
+    List<int> q = List.from([0]);
+    int curr;
 
-    while (queue.isNotEmpty) {
-      int curr = queue.removeFirst();
+    while (0 < q.length && q.length < n) {
+      curr = q[0];
+      q.removeAt(0);
+      visited.add(curr);
+
+      /// Check all sides:
       for (int j = 0; j < 4; j++) {
-        /// If there is an arm here to remove:
+        /// If arm exists:
         if (game[curr][armKeys[j]] != 0) {
-          /// Add the adj piece to the queue to check:
-          queue.add(_relations[curr][armKeys[j]][0]);
+          /// If connected adj piece *not yet visited or in queue*:
+          var adj = _relations[curr][armKeys[j]];
+          if (adj != false) {
+            if (visited.contains(adj[0]) == false &&
+                q.contains(adj[0]) == false) {
+              /// Add the adj piece to the queue to check:
+              q.add(_relations[curr][armKeys[j]][0]);
+            }
+          }
         }
       }
-      visited.add(curr);
     }
-    if (visited.length != _boardSize * _boardSize) {
+    if (visited.length != n) {
       return true;
     }
     return false;
   }
 
-  List _shufflePieces(List pieces) {
+  List<Map<String, dynamic>> _shufflePieces(List<Map<String, dynamic>> pieces) {
     /// Shuffle index order of piece list.
     pieces.shuffle();
     return pieces;
@@ -222,18 +233,16 @@ class _GameState extends State<GameScreen> {
     /// Given an index, check if each arm is now connected to an adj arm.
     /// If connected, set both armKeys to 1.
     /// If not connected, if armKeys exist, set to -1.
-
     setState(() {
       for (int j = 0; j < 4; j++) {
         String arm = armKeys[j];
-        String relat = armKeys[j];
 
         /// Adj piece/arm exists:
-        if (_relations[index][relat]) {
-          List adj = _relations[index][relat];
+        if (_relations[index][arm] != false) {
+          List<dynamic> adj = _relations[index][arm];
 
           /// Either one or both arms are empty -> no connection:
-          if (_pieces[index][arm] * _pieces[adj[0]][adj[1]] == 0) {
+          if (_pieces[index][arm] == 0 || _pieces[adj[0]][adj[1]] == 0) {
             if (_pieces[index][arm] == 1) {
               _pieces[index][arm] = -1;
 
@@ -262,18 +271,18 @@ class _GameState extends State<GameScreen> {
     // print('$index TAPPED');
     setState(() {
       /// If no previous tapped piece -> select curr:
-      if (_lastSelected == null) {
+      if (_lastSelected == -1) {
         _pieces[index]['select'] = true;
         _lastSelected = index;
 
         /// If re-tapping same piece -> unselect curr:
       } else if (_lastSelected == index) {
         _pieces[index]['select'] = false;
-        _lastSelected = null;
+        _lastSelected = -1;
 
         /// Else -> swap the curr and previous:
       } else {
-        Map temp = _pieces[_lastSelected];
+        Map<String, dynamic> temp = _pieces[_lastSelected];
         _pieces[_lastSelected] = _pieces[index];
         _pieces[index] = temp;
         _checkConnectionsFor(_lastSelected);
@@ -284,7 +293,7 @@ class _GameState extends State<GameScreen> {
         _pieces[_lastSelected]['select'] = false;
 
         /// Set last selected to none:
-        _lastSelected = null;
+        _lastSelected = -1;
       }
 
       /// Check if solved:
@@ -299,6 +308,7 @@ class _GameState extends State<GameScreen> {
     setState(() {
       _solved = false;
       _newGame = true;
+      _totalArmCount = _startingArmCount;
     });
   }
 
@@ -306,12 +316,13 @@ class _GameState extends State<GameScreen> {
     setState(() {
       _solved = false;
       _newGame = true;
+      _totalArmCount = _startingArmCount;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_newGame) {
+    if (_newGame == true) {
       _initNewGame();
     }
 
@@ -339,13 +350,23 @@ class _GameState extends State<GameScreen> {
               // ),
               RaisedButton(
                 onPressed: _resetNewGame,
-                child: Text('New Game'),
+                child: Text(AppText.GAME_NEW_BTN_TXT),
               ),
+              // RaisedButton(
+              //   onPressed: () {
+              //     Navigator.pop(context);
+              //   },
+              //   child: Text(AppText.GAME_HOME_BTN_TXT),
+              // ),
               RaisedButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SettingsScreen(title: AppText.SETT_TITLE)));
                 },
-                child: Text('Go back!'),
+                child: Text(AppText.GAME_SETT_BTN_TXT),
               ),
             ],
           ),

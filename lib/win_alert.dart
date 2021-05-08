@@ -1,42 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:gridcircuitpuzzle/app_styling.dart';
+import 'package:gridcircuitpuzzle/app_content.dart';
 
 class WinAlert extends StatelessWidget {
-  final Color _color = Colors.grey[300];
-  final String _title = 'You Win!';
-  final String _content = 'Congrats :)';
-  final String _home = 'Home';
-  final String _new = 'New Game';
-  
   final Function onHome;
   final Function onNewGame;
 
   WinAlert({
-    this.onHome,
-    this.onNewGame,
+    @required this.onHome,
+    @required this.onNewGame,
   });
-
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: new Text(_title, textAlign: TextAlign.center,),
-      content: new Text(_content, textAlign: TextAlign.center,),
-      backgroundColor: _color,
-      shape:
-          RoundedRectangleBorder(borderRadius: new BorderRadius.circular(15)),
+      title: Text(
+        AppText.DIALOG_TITLE,
+        textAlign: TextAlign.center,
+      ),
+      content: Text(
+        AppText.DIALOG_BODY_TXT,
+        textAlign: TextAlign.center,
+      ),
+      backgroundColor: AppColors.diaglogBGColor,
+      shape: RoundedRectangleBorder(
+          borderRadius: AppBorderRadii.dialogBorderRadius),
       actions: <Widget>[
-        new FlatButton(
-          child: new Text(_home),
+        /// Go to home page:
+        FlatButton(
+          child: Text(AppText.DIALOG_HM_BTN_TXT),
           onPressed: () {
-            Navigator.of(context).pop();
             onHome();
+            Navigator.popUntil(context, ModalRoute.withName('/'));
           },
         ),
-        new FlatButton(
-          child: Text(_new),
-          onPressed: () {    
-            Navigator.of(context).pop();
+
+        /// Start new game:
+        FlatButton(
+          child: Text(AppText.DIALOG_NWGM_BTN_TXT),
+          onPressed: () {
             onNewGame();
+            Navigator.pop(context);
+            Navigator.popAndPushNamed(context, '/game');
           },
         ),
       ],

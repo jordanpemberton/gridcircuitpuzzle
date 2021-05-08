@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gridcircuitpuzzle/settings.dart';
+import 'package:gridcircuitpuzzle/app_content.dart';
+import 'package:gridcircuitpuzzle/app_styling.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key, this.title}) : super(key: key);
@@ -17,7 +20,7 @@ class _HomeState extends State<HomeScreen> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: AppPaddings.PAD_HOME_PG,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -25,7 +28,17 @@ class _HomeState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/game');
                 },
-                child: Text('-> Game'),
+                child: Text(AppText.HOME_GAME_BTN_TXT),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              SettingsScreen(title: AppText.SETT_TITLE)));
+                },
+                child: Text(AppText.HOME_SETT_BTN_TXT),
               ),
             ],
           ),

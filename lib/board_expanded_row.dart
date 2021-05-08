@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import './board_expanded_row_item.dart';
+import 'package:gridcircuitpuzzle/board_expanded_row_item.dart';
 
 class BoardExpandedRow extends StatelessWidget {
-  BoardExpandedRow(
-    this.pieces,
-    this.indexRowAdjust,
-    this.callbacks,
-  );
+  BoardExpandedRow({
+    @required this.pieces,
+    @required this.indexRowAdjust,
+    @required this.onTap,
+  });
 
   final List pieces;
   final int indexRowAdjust;
-  final Map<String, Function> callbacks;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
