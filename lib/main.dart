@@ -28,8 +28,10 @@ class MyApp extends StatelessWidget {
             )),
         initialRoute: '/',
         routes: {
-          '/': (context) => HomeScreen(title: 'Circuit Connect HOME'),
-          '/game': (context) => GameScreen(title: 'Circuit Connect PLAY'),
+          // '/': (context) => HomeScreen(title: 'Circuit Connect HOME'),
+          '/game': (context) => HomeScreen(title: 'Circuit Connect HOME'),
+          '/': (context) => GameScreen(title: 'Circuit Connect PLAY'),
+          // '/game': (context) => GameScreen(title: 'Circuit Connect PLAY'),
         });
   }
 }

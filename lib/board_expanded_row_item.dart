@@ -30,7 +30,7 @@ class BoardExpandedRowItem extends StatelessWidget {
               border: Border.all(
                 color:
                     this.piece['select'] ? Colors.black : AppColors.BOARD_BG_CLR,
-                width: 2.0,
+                width: AppBorderSizes.PIECE_BRDR,
               ),
               borderRadius: AppBorderRadii.pieceBorderRadius,
               color: AppColors.PIECE_BG_CLR,

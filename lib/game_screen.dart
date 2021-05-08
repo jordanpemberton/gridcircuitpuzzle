@@ -12,16 +12,18 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameState extends State<GameScreen> {
-  static int _boardSize = 5;
+  static int _boardSize = 5;   // side length
   static List armKeys = ['top', 'right', 'bottom', 'left'];
-  static Map _relations = _makeRelationsMap();
-
+  
+  Map _relations;
   List _pieces = new List(_boardSize * _boardSize);
   bool _newGame = true;
-  bool _solved = true; // keep track with total arms - connections
+  bool _solved = true;
+  int _totalArmCount = 4* (_boardSize * _boardSize) - (4 * _boardSize) - 4;
+  int _connectedArmsCount = 0;   // need total arms to win
   int _lastSelected;
 
-  static Map _makeRelationsMap() {
+  Map _makeRelationsMap() {
     /// Used to find adjacent pieces
     /// For each board index on board:
     /// board index: {
@@ -46,7 +48,9 @@ class _GameState extends State<GameScreen> {
 
   void _initNewGame() {
     setState(() {
+      _relations = _makeRelationsMap();
       _pieces = _makePieceList();
+
       // _solved = true;
       // while (_solved) {
       //   _pieces = _shufflePieces(_pieces);
@@ -112,13 +116,17 @@ class _GameState extends State<GameScreen> {
       game[i] = newPiece;
     }
 
-    _removeArms(game);
+    List remArmsRes = _removeArms(game);
+    game = remArmsRes[0];
+    int remArmCount = remArmsRes[1];
 
     /// Check for islands:
     if (_areThereIslands(game)) {
       /// Try again:
       return _makePieceList();
     }
+    // Adjust arm count: 
+    _totalArmCount -= remArmCount;
     _newGame = false;
     return game;
   }
@@ -164,12 +172,12 @@ class _GameState extends State<GameScreen> {
             /// Remove both arms:
             game[i][arm] = 0;
             game[adj[0]][adj[1]] = 0;
-            removedCount += 1;
+            removedCount += 2;
           }
         }
       }
     }
-    return game;
+    return [game, removedCount];
   }
 
   bool _areThereIslands(List game) {
@@ -228,6 +236,7 @@ class _GameState extends State<GameScreen> {
           if (_pieces[index][arm] * _pieces[adj[0]][adj[1]] == 0) {
             if (_pieces[index][arm] == 1) {
               _pieces[index][arm] = -1;
+
             }
             if (_pieces[adj[0]][adj[1]] == 1) {
               _pieces[adj[0]][adj[1]] = -1;
@@ -316,18 +325,18 @@ class _GameState extends State<GameScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(
-                  bottom: 20,
-                ),
-                child: GameBoard(
-                  size: _boardSize,
-                  pieces: _pieces,
-                  callbacks: {
-                    'onTap': _onTap,
-                  },
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(
+              //     bottom: 20,
+              //   ),
+              //   child: GameBoard(
+              //     size: _boardSize,
+              //     pieces: _pieces,
+              //     callbacks: {
+              //       'onTap': _onTap,
+              //     },
+              //   ),
+              // ),
               RaisedButton(
                 onPressed: _resetNewGame,
                 child: Text('New Game'),

@@ -10,12 +10,19 @@ class AppColors {
   static const Color STROKE_IN_CLR = Color(0xFFD5FFF1);
 }
 
-// class AppStrokeSizes {
-// make relative
-// }
+class AppStrokeSizes {
+  static const double STROKE_WDTH_F = 0.1;
+}
+
+class AppBorderSizes {
+  static const double PIECE_BRDR = 2.0;
+}
 
 class AppPaddings {
   // Make relative...
+  static const double PAD_PIECES_F = 0.05;
+  static const double PAD_BOARD = 4.0;
+
   static const EdgeInsets PAD_BTWN_PIECES = EdgeInsets.all(2.0);
   static const EdgeInsets PAD_BOARD_BORDER = EdgeInsets.all(4.0);
 }

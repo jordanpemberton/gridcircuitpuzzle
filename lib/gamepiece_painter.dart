@@ -25,13 +25,13 @@ class GamePiecePainter extends CustomPainter {
 
     final paintOuter = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 12.0
+      ..strokeWidth = size.width * AppStrokeSizes.STROKE_WDTH_F
       ..color =
           allConnected ? AppColors.STROKE_CONN_CLR : AppColors.STROKE_OUT_CLR;
 
     final paintInner = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0
+      ..strokeWidth = size.width * AppStrokeSizes.STROKE_WDTH_F / 2
       ..color = AppColors.STROKE_IN_CLR;
 
     final path = Path();

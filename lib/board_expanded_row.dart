@@ -20,7 +20,7 @@ class BoardExpandedRow extends StatelessWidget {
         children: [
           for (int i = 0; i < pieces.length; i++)
             BoardExpandedRowItem(
-              indexRowAdjust + i,
+              this.indexRowAdjust + i,
               this.pieces[i],
               this.callbacks,
             ),
